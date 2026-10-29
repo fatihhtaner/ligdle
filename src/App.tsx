@@ -1,0 +1,135 @@
+import { useEffect, useRef, useState } from "react";
+import { Board, TILE_STEP } from "./components/Board";
+import { SearchBox } from "./components/SearchBox";
+import { WinBox } from "./components/WinBox";
+import { dailyAnswer, dateKey, dayNumber, untilMidnight } from "./game/daily";
+import { PLAYERS } from "./game/players";
+import { shareText } from "./game/share";
+import { dailyKey, store } from "./game/storage";
+import type { GameState } from "./game/types";
+
+const BASE = import.meta.env.BASE_URL;
+
+function dailyGame(): GameState {
+  const answer = dailyAnswer(PLAYERS.length);
+  const guesses = store.get<{ guesses: number[] }>(dailyKey(dateKey()))?.guesses ?? [];
+  return { mode: "daily", answer, guesses, won: guesses.includes(answer), revealed: false };
+}
+
+function freeGame(previous: number): GameState {
+  let answer;
+  do { answer = Math.floor(Math.random() * PLAYERS.length); } while (PLAYERS.length > 1 && answer === previous);
+  return { mode: "free", answer, guesses: [], won: false, revealed: false };
+}
+
+export default function App() {
+  const [game, setGame] = useState<GameState>(dailyGame);
+  /** Az önce tahmin edilen oyuncu: yalnızca onun satırı animasyonla açılır. */
+  const [fresh, setFresh] = useState(-1);
+  /** Kazanan satırın kutuları açılırken arama kutusu yerinde kalır, kazanma kutusu sonra gelir. */
+  const [revealing, setRevealing] = useState(false);
+  const [lateWin, setLateWin] = useState(false);
+  const [now, setNow] = useState(() => new Date());
+  const winTimer = useRef<number>(undefined);
+  const shownDay = useRef(dateKey());
+
+  const reset = (next: GameState) => {
+    clearTimeout(winTimer.current);
+    setRevealing(false);
+    setLateWin(false);
+    setFresh(-1);
+    setGame(next);
+  };
+
+  // Saniyelik saat: geri sayım ve gece yarısı yeni günlük oyuncu
+  useEffect(() => {
+    const id = setInterval(() => {
+      const d = new Date();
+      setNow(d);
+      if (dateKey(d) !== shownDay.current) {
+        shownDay.current = dateKey(d);
+        setGame(g => g.mode === "daily" ? dailyGame() : g);
+      }
+    }, 1000);
+    return () => { clearInterval(id); clearTimeout(winTimer.current); };
+  }, []);
+
+  const guess = (i: number) => {
+    if (game.won || game.revealed || game.guesses.includes(i)) return;
+    const next = { ...game, guesses: [...game.guesses, i], won: i === game.answer };
+    if (next.mode === "daily") store.set(dailyKey(dateKey()), { guesses: next.guesses });
+    setGame(next);
+    setFresh(i);
+    if (next.won) {
+      setRevealing(true);
+      setLateWin(true);
+      winTimer.current = window.setTimeout(() => setRevealing(false), 8 * TILE_STEP + 700);
+    }
+  };
+
+  const day = dayNumber(now);
+  const done = game.won || game.revealed;
+  const showWin = done && !revealing;
+
+  return (
+    <div className="wrap">
+      <header>
+        <div>
+          <h1>
+            <img className="logo-light" src={`${BASE}img/logo-light.png`} alt="Ligdle" width={960} height={317} />
+            <img className="logo-dark" src={`${BASE}img/logo-dark.png`} alt="Ligdle" width={960} height={317} />
+          </h1>
+          <p className="tagline">Türk futbolundan günün oyuncusunu bul. Her tahmin seni cevaba biraz daha yaklaştırır.</p>
+        </div>
+        <div className="meta">
+          {game.mode === "daily" ? "Günün oyuncusu" : "Serbest oyun"}
+          <strong>{game.mode === "daily" ? `#${day + 1}` : "∞"}</strong>
+          {game.guesses.length} tahmin
+        </div>
+      </header>
+
+      <div className="bar">
+        <div className="modes" data-mode={game.mode} role="group" aria-label="Oyun modu">
+          <button aria-pressed={game.mode === "daily"} onClick={() => game.mode !== "daily" && reset(dailyGame())}>Günlük</button>
+          <button aria-pressed={game.mode === "free"} onClick={() => game.mode !== "free" && reset(freeGame(game.answer))}>Serbest</button>
+        </div>
+        {game.mode === "free" && (
+          <div className="right">
+            <button className="ghost" onClick={() => { reset({ ...game, revealed: true }); }}>Cevabı göster</button>
+            <button className="ghost" onClick={() => reset(freeGame(game.answer))}>Yeni oyuncu</button>
+          </div>
+        )}
+      </div>
+
+      {showWin && (
+        <WinBox
+          key={`${game.mode}-${game.answer}`}
+          won={game.won}
+          answerName={PLAYERS[game.answer].name}
+          guessCount={game.guesses.length}
+          daily={game.mode === "daily"}
+          late={lateWin}
+          clock={untilMidnight(now)}
+          shareText={() => shareText(game, PLAYERS, day)}
+          onAgain={() => reset(freeGame(game.answer))}
+        />
+      )}
+
+      {!showWin && <SearchBox players={PLAYERS} exclude={game.guesses} disabled={revealing} onGuess={guess} />}
+
+      <div className="legend">
+        <span><i style={{ background: "var(--hit)" }} />Doğru</span>
+        <span><i style={{ background: "var(--near)" }} />Yakın: aynı mevki grubu, aynı bölge, ortak kulüp, ±3 yıl</span>
+        <span><i style={{ background: "var(--miss)" }} />Yanlış</span>
+        <span>↑ ↓ cevap daha yüksek / düşük</span>
+      </div>
+
+      <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
+
+      <footer>
+        <p>Prototip. Oyuncu verileri taslaktır ve elle kontrol edilmelidir. Şampiyonluklar 2024–25 sezonu sonuna kadar sayılır; kulüpler yalnızca Türkiye'deki kulüplerdir.</p>
+        <p>Veri setinde {PLAYERS.length} oyuncu var.</p>
+      </footer>
+    </div>
+  );
+}

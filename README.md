@@ -17,7 +17,23 @@ Kuralların tamamı kural belgesinde: https://claude.ai/artifact/4yoaHSjXkmj93Vc
 
 ## Çalıştırma
 
-Derleme adımı yok. `index.html` dosyasını tarayıcıda açman yeterli.
+Vite + React + TypeScript. Node 20 veya üstü gerekir.
+
+```bash
+npm install
+npm run dev      # geliştirme sunucusu: http://localhost:5173
+npm test         # oyun kuralları testleri
+npm run build    # dist/ klasörüne statik site
+```
+
+`dist/` herhangi bir statik sunucuda (GitHub Pages, Netlify, Vercel) alt klasörde de çalışır.
+
+## Kod düzeni
+
+- `src/game/`: oyun kuralları (`rules.ts`), günlük oyuncu seçimi (`daily.ts`), oyuncu verisi (`players.ts`), paylaşım metni, tarayıcı depolaması.
+- `src/components/`: tahmin tablosu, arama kutusu, kazanma kutusu.
+- `src/styles.css`: tema renkleri ve tüm stiller.
+- `public/img/`: logo, ikonlar, paylaşım görseli.
 
 ## Veri
 
