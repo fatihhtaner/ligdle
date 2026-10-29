@@ -3,6 +3,7 @@ export type Position =
   | "Stoper"
   | "Sol bek"
   | "Sağ bek"
+  | "Defansif OS"
   | "Merkez OS"
   | "Ofansif OS"
   | "Kanat"

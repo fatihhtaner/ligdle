@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { arrowOf, CAPS, compare, HEADS, NATIONS, POS_GROUP, POS_LABEL } from "../game/rules";
+import { arrowOf, CAPS, compare, decade, HEADS, NATIONS, POS_GROUP, POS_LABEL } from "../game/rules";
 import type { Player } from "../game/types";
 
 /** ms between tiles flipping open; the win box waits for the last one */
@@ -25,7 +25,7 @@ function Row({ guess: g, answer: a, fresh }: { guess: Player; answer: Player; fr
         {g.clubs.map(cl => <span key={cl} className={`club${c.shared.includes(cl) ? " shared" : ""}`}>{cl}</span>)}
       </Tile>
       <Tile cls={c.born} delay={4}>{g.born}<Arrow guess={g.born} answer={a.born} /></Tile>
-      <Tile cls={c.era} delay={5}>{g.era}'ler<Arrow guess={g.era} answer={a.era} /></Tile>
+      <Tile cls={c.era} delay={5}>{decade(g.era)}<Arrow guess={g.era} answer={a.era} /></Tile>
       <Tile cls={c.titles} delay={6}>{g.titles}<Arrow guess={g.titles} answer={a.titles} /></Tile>
       <Tile cls={c.caps} delay={7}>{CAPS[g.caps]}<Arrow guess={g.caps} answer={a.caps} /></Tile>
       <Tile cls={c.active} delay={8}>{g.active ? "Aktif" : "Emekli"}</Tile>

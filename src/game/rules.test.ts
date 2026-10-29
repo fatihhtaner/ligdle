@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dailyAnswer, dailyOrder, dayNumber } from "./daily";
 import { PLAYERS } from "./players";
-import { answerPool, arrowOf, compare, NATIONS, norm } from "./rules";
+import { answerPool, arrowOf, compare, decade, NATIONS, norm } from "./rules";
 import type { Player } from "./types";
 
 const p = (over: Partial<Player>): Player => ({
@@ -88,5 +88,12 @@ describe("cevap havuzu", () => {
     expect(answerPool(ps, "daily")).toEqual([3, 4]);
     expect(answerPool(ps, "normal")).toEqual([2, 3, 4]);
     expect(answerPool(ps, "hard")).toEqual([0, 1, 2, 3, 4]);
+  });
+});
+
+describe("decade", () => {
+  it("on yılın ekini sese göre seçer", () => {
+    expect([1950, 1960, 1990, 2000, 2010, 2020].map(decade))
+      .toEqual(["1950'ler", "1960'lar", "1990'lar", "2000'ler", "2010'lar", "2020'ler"]);
   });
 });

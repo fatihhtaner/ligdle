@@ -23,6 +23,7 @@ export function SearchBox({ players, exclude, disabled, onGuess }: Props) {
     return players
       .map((p, i) => ({ p, i }))
       .filter(({ p, i }) => !exclude.includes(i) && norm(p.name).split(/\s+/).concat(norm(p.name)).some(w => w.startsWith(q)))
+      .sort((x, y) => y.p.fame - x.p.fame) // aynı harflerle başlayanlardan önce tanınanlar
       .slice(0, 8);
   }, [query, players, exclude]);
 
