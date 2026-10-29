@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ligdle aday listesi: Wikidata'dan Türk kulüplerinde oynamış futbolcuları çeker.
+"""Ligdle aday listesi: Wikidata'dan 1959'dan sonra Türk kulüplerinde oynamış futbolcuları çeker.
 
 Çıktı: data/candidates.csv (bilinirliğe göre sıralı, elle gözden geçirmek için).
 Ham sorgu sonuçları data/raw/ altında önbelleğe alınır; --fresh ile yeniden çekilir.
@@ -31,6 +31,7 @@ FOOTBALLER = "Q937857"
 MALE = "Q6581097"
 TURKEY = "Q43"
 CURRENT_YEAR = time.localtime().tm_year
+FIRST_SEASON = 1959  # Milli Lig'in ilk sezonu
 
 
 def sparql(query, retries=4):
@@ -213,6 +214,10 @@ def main():
         starts = [s["start"] for s in sp if s["start"]]
         ends = [s["end"] or s["start"] for s in sp if s["end"] or s["start"]]
         born = min((int(b[:4]) for b in info["born"] if b[:4].isdigit()), default="")
+        # Kural: 1959'dan (Milli Lig) sonra Türkiye'de oynamış olmalı. Türkiye kariyeri daha önce
+        # bitenler ya da tarihi hiç yokken 1959'da 38 yaşını geçmiş olanlar elenir.
+        if (ends and max(ends) < FIRST_SEASON) or (not ends and born and born < FIRST_SEASON - 38):
+            continue
         nation = sorted(labels.get(x, x) for x in (info["sport"] or info["cit"]))
         team, apps = caps.get(p, ("", None))
         # Elle bakılması gerekenler: yeni transferler (Wikidata'da söylenti de olabiliyor),
