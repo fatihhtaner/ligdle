@@ -1,7 +1,5 @@
 # Ligdle
 
-**Oyna:** https://fatihhtaner.github.io/ligdle/
-
 Türk futbolu için günlük futbolcu tahmin oyunu. Her gün herkese aynı gizli futbolcu çıkar; her tahminde 8 özellik kutusu yeşil, sarı ya da kırmızı yanarak cevaba ne kadar yaklaştığını gösterir.
 
 | Kutu | Yeşil | Sarı |
@@ -19,8 +17,7 @@ Kuralların tamamı kural belgesinde: https://claude.ai/artifact/4yoaHSjXkmj93Vc
 
 ## Çalıştırma
 
-Derleme adımı yok. `index.html` dosyasını tarayıcıda açman yeterli. `main` dalına gönderilen her değişiklik GitHub Pages'te birkaç dakika içinde yayına girer.
-
+Derleme adımı yok. `index.html` dosyasını tarayıcıda açman yeterli.
 ## Durum
 
 Prototip. Veri setinde 37 oyuncu var ve değerler taslaktır; kural belgesine göre yeniden kurulacak.
