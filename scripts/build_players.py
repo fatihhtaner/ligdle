@@ -27,6 +27,8 @@ RAW = ROOT / "data" / "raw"
 CACHE = RAW / "build"
 CANDIDATES = ROOT / "data" / "candidates.csv"
 OVERRIDES = ROOT / "data" / "overrides.csv"
+LEGENDS = ROOT / "data" / "legends.csv"
+DROP = ROOT / "data" / "drop.csv"
 OUT = ROOT / "src" / "game" / "players.json"
 REVIEW = ROOT / "data" / "players_review.csv"
 
@@ -35,6 +37,9 @@ FRESH = "--fresh" in sys.argv
 TOP = int(sys.argv[sys.argv.index("--top") + 1]) if "--top" in sys.argv else 1000
 # Şampiyonluklar en son tamamlanan sezona kadar sayılır (sezon, bittiği yılla anılır: 2025–26 → 2026).
 LAST_SEASON = 2026
+# Dönemi 1980'ler ve öncesi olan oyuncular yalnızca data/legends.csv listesindeyse alınır: eski oyuncuların
+# Wikipedia okunması (teknik direktörlük, yorumculuk, ölüm haberi) bugünkü tanınırlığını göstermiyor.
+OLD_ERA = 1980
 CURRENT_YEAR = time.localtime().tm_year
 
 
@@ -388,13 +393,17 @@ def champions():
 # --- ana akış --------------------------------------------------------------------------------------
 
 def main():
-    rows = list(csv.DictReader(CANDIDATES.open(encoding="utf-8")))[:TOP]
+    # Eski dönem ve çıkarılan oyuncuların yerini aday listesinin devamı doldursun diye fazlası okunur.
+    pool = TOP * 7 // 5
+    rows = list(csv.DictReader(CANDIDATES.open(encoding="utf-8")))[:pool]
     qids = [r["qid"] for r in rows]
+    legends = {r["qid"] for r in csv.DictReader(LEGENDS.open(encoding="utf-8"))}
+    drop = {r["qid"] for r in csv.DictReader(DROP.open(encoding="utf-8"))}
 
     print("Wikipedia başlıkları…", file=sys.stderr)
-    wiki_titles = cached(f"enwiki_titles_{TOP}", lambda: fetch_enwiki_titles(qids))
+    wiki_titles = cached(f"enwiki_titles_{pool}", lambda: fetch_enwiki_titles(qids))
     print("Bilgi kutuları…", file=sys.stderr)
-    intros = cached(f"intros_{TOP}", lambda: fetch_intros(wiki_titles.values()))
+    intros = cached(f"intros_{pool}", lambda: fetch_intros(wiki_titles.values()))
     boxes = {}
     for q, t in wiki_titles.items():
         body = template_body(intros.get(t, ""))
@@ -404,7 +413,7 @@ def main():
     if (RAW / "trwiki_abroad.json").exists():
         tr_titles |= json.loads((RAW / "trwiki_abroad.json").read_text())
     missing = {q: tr_titles[q] for q in qids if q not in boxes and q in tr_titles}
-    tr_intros = cached(f"tr_intros_{TOP}", lambda: fetch_intros(missing.values(), "tr"))
+    tr_intros = cached(f"tr_intros_{pool}", lambda: fetch_intros(missing.values(), "tr"))
     tr_boxes = {}
     for q, t in missing.items():
         body = template_body(tr_intros.get(t, ""), r"futbolcu\s+bilgi\s+kutusu")
@@ -422,13 +431,13 @@ def main():
     targets |= {n["target"] for q, ns in nats.items() if q in boxes for n in ns if n["target"]}
     targets |= set(champ.values())
     print("Bağlantılar Wikidata'ya…", file=sys.stderr)
-    link_q = cached(f"links_{TOP}", lambda: resolve_links(targets))
+    link_q = cached(f"links_{pool}", lambda: resolve_links(targets))
     tr_targets = {s["target"] for q, sp in spells.items() if q in tr_boxes for s in sp}
     tr_targets |= {n["target"] for q, ns in nats.items() if q in tr_boxes for n in ns if n["target"]}
-    tr_link_q = cached(f"tr_links_{TOP}", lambda: resolve_links(tr_targets, "tr"))
+    tr_link_q = cached(f"tr_links_{pool}", lambda: resolve_links(tr_targets, "tr"))
     team_q = ({link_q.get(n["target"]) for q, ns in nats.items() if q in boxes for n in ns}
               | {tr_link_q.get(n["target"]) for q, ns in nats.items() if q in tr_boxes for n in ns}) - {None}
-    team_label = cached(f"team_labels_{TOP}", lambda: fetch_tr_labels(team_q))
+    team_label = cached(f"team_labels_{pool}", lambda: fetch_tr_labels(team_q))
 
     turkish = {c["qid"]: c["name"] for c in json.loads((RAW / "clubs.json").read_text())
                if not RESERVE.search(c["name"]) and not re.search(r"kadın|plaj|millî", c["name"], re.I)}
@@ -440,9 +449,14 @@ def main():
         for o in csv.DictReader(OVERRIDES.open(encoding="utf-8")):
             overrides.setdefault(o["qid"], {})[o["alan"]] = o["deger"]
 
-    players, review = [], []
-    for rank, r in enumerate(rows, 1):
+    players, review, skipped = [], [], Counter()
+    for r in rows:
+        if len(players) == TOP:
+            break
         q, flags = r["qid"], []
+        if q in drop:
+            skipped["çıkarılan (data/drop.csv)"] += 1
+            continue
         box = boxes.get(q) or tr_boxes.get(q)
         lq = tr_link_q if q in tr_boxes else link_q
         abroad = r["giris"] != "Türk kulübü"
@@ -530,13 +544,18 @@ def main():
         born = int(r["dogum_yili"]) if r["dogum_yili"] else None
         if not born:
             flags.append("doğum yılı yok")
-        fame = int(r["puan_onerisi"])
+        # Bilinirlik: eleme sonrası sıraya göre (kural belgesi: ilk 150 → 5, 500 → 4, 1000 → 3, 2000 → 2)
+        rank = len(players) + 1
+        fame = next((f for limit, f in ((150, 5), (500, 4), (1000, 3), (2000, 2)) if rank <= limit), 1)
 
         player = {"name": r["ad"], "pos": pos, "nat": nat, "born": born or 0, "clubs": clubs, "titles": titles,
                   "caps": caps_range(caps), "active": active, "era": era or 0, "fame": fame}
         for field, value in overrides.get(q, {}).items():  # elle düzeltmeler en son uygulanır
             player[field] = (value.split(";") if field == "clubs" else value == "1" if field == "active"
                              else int(value) if field in ("born", "titles", "caps", "era", "fame") else value)
+        if player["era"] and player["era"] <= OLD_ERA and q not in legends:
+            skipped[f"{OLD_ERA}'ler ve öncesi, efsane listesinde değil"] += 1
+            continue
         players.append(player)
         review.append({
             "sira": rank, "qid": q, "ad": r["ad"], "bilinirlik": fame, "mevki": player["pos"],
@@ -556,6 +575,8 @@ def main():
         w.writerows(review)
     flagged = Counter(f.split(":")[0] for r in review for f in r["kontrol"].split(", ") if f)
     print(f"Yazıldı: {OUT.relative_to(ROOT)} ({len(players)} oyuncu), {REVIEW.relative_to(ROOT)}", file=sys.stderr)
+    for k, n in skipped.items():
+        print(f"  alınmadı: {n} {k}", file=sys.stderr)
     for k, n in flagged.most_common():
         print(f"  {n:4d}  {k}", file=sys.stderr)
     print("Uyruklar:", ", ".join(f"{k} {n}" for k, n in Counter(p["nat"] for p in players).most_common()), file=sys.stderr)
