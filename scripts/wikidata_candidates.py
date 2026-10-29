@@ -9,8 +9,10 @@ Yalnızca standart kütüphane kullanır:  python3 scripts/wikidata_candidates.p
 """
 import csv
 import json
+import re
 import sys
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 from collections import defaultdict
@@ -172,6 +174,46 @@ def fetch_trwiki(ids):
     return out
 
 
+def fetch_current_clubs(ids):
+    """İngilizce Wikipedia bilgi kutusundaki güncel kulüp. Wikidata'daki yeni transferleri doğrulamak için."""
+    titles = {}
+    for batch in chunks(ids, 300):
+        rows = sparql(f"""SELECT ?p ?title WHERE {{
+          VALUES ?p {{ {values(batch)} }}
+          ?article schema:about ?p ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?title .
+        }}""")
+        titles.update({val(b, "title"): qid(b, "p") for b in rows})
+        time.sleep(1)
+    out = {}
+    for batch in chunks(sorted(titles), 40):
+        q = urllib.parse.urlencode({"action": "query", "prop": "revisions", "rvprop": "content", "rvslots": "main",
+                                    "rvsection": 0, "format": "json", "formatversion": 2, "titles": "|".join(batch)})
+        req = urllib.request.Request(f"https://en.wikipedia.org/w/api.php?{q}", headers={"User-Agent": USER_AGENT})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            pages = json.load(r)["query"]["pages"]
+        for page in pages:
+            text = page.get("revisions", [{}])[0].get("slots", {}).get("main", {}).get("content", "")
+            m = re.search(r"\|\s*current_?club\s*=\s*([^\n|]*(?:\|[^\n=\]]*\]\])?)", text)
+            if page["title"] in titles:
+                out[titles[page["title"]]] = m.group(1).strip() if m else None
+        time.sleep(0.5)
+    return out
+
+
+GENERIC_WORDS = {"istanbul", "kulubu", "kulübü", "spor", "belediyespor", "futbol", "club", "football"}
+
+
+def plain(s):
+    s = s.lower().replace("ı", "i")
+    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+
+
+def same_club(club_name, infobox):
+    """Bilgi kutusundaki metinde kulübün ayırt edici bir kelimesi geçiyor mu."""
+    words = [w for w in re.findall(r"\w+", plain(club_name)) if len(w) >= 4 and w not in GENERIC_WORDS]
+    return any(w in plain(infobox) for w in words)
+
+
 def views_window():
     """Son 12 tamamlanmış ay, Wikimedia API biçiminde (YYYYMMDD)."""
     t = time.localtime()
@@ -257,6 +299,24 @@ def main():
     label_ids |= {n["team"] for n in national}
     labels = cached("labels", lambda: fetch_labels(label_ids))
 
+    # Bu yıl başlayıp hâlâ süren kulüp dönemleri Wikidata'da bazen söylentiden ibaret. İngilizce
+    # Wikipedia'nın güncel kulübü başka bir kulüp diyorsa o dönem silinir; doğrulanamayanlar işaretli kalır.
+    def is_new(s):
+        return (s["start"] or 0) >= CURRENT_YEAR and not s["end"]
+    print("Yeni transferlerin doğrulanması…", file=sys.stderr)
+    current = cached("current_clubs", lambda: fetch_current_clubs(
+        sorted(p for p, sp in by_player.items() if any(is_new(s) for s in sp))))
+    rumors, confirmed = {}, set()
+    for p, sp in by_player.items():
+        for s in [s for s in sp if is_new(s)]:
+            infobox = current.get(p)
+            if infobox and same_club(clubs[s["club"]], infobox):
+                confirmed.add(p)
+            elif infobox:
+                rumors.setdefault(p, []).append(clubs[s["club"]])
+                sp.remove(s)
+    print(f"  {len(confirmed)} doğrulandı, {sum(map(len, rumors.values()))} dönem silindi", file=sys.stderr)
+
     # A milli takım: adında U-, gençlik, olimpik, B takımı geçmeyenler
     def senior(team):
         name = labels.get(team, "").lower()
@@ -282,6 +342,10 @@ def main():
         info = people[p]
         name = next(iter(info["tr"]), None) or next(iter(info["en"]), None) or p
         sp = sorted(by_player[p], key=lambda s: (s["start"] or 9999, s["end"] or 9999))
+        # Söylenti dönemi silinince Türk kulübü kalmayan oyuncu listeye girmez. Mevkisi de tarihli tek
+        # kulüp dönemi de olmayanlar çoğunlukla başkan, oyuncu ya da sanatçı (Wikidata'da "futbolcu" da yazıyor).
+        if not sp or (not info["pos"] and not any(s["start"] for s in sp)):
+            continue
         club_txt = "; ".join(
             f"{clubs.get(s['club'], s['club'])} ({s['start'] or '?'}–{s['end'] or ''})" for s in sp)
         starts = [s["start"] for s in sp if s["start"]]
@@ -293,11 +357,13 @@ def main():
             continue
         nation = sorted(labels.get(x, x) for x in (info["sport"] or info["cit"]))
         team, apps = caps.get(p, ("", None))
-        # Elle bakılması gerekenler: yeni transferler (Wikidata'da söylenti de olabiliyor),
+        # Elle bakılması gerekenler: doğrulanamayan yeni transferler, silinen söylentiler,
         # 20 yıldan uzun tek kulüp dönemi, tarihsiz dönem.
         flags = []
-        if any((s["start"] or 0) >= CURRENT_YEAR for s in sp):
-            flags.append("yeni transfer")
+        if any(is_new(s) for s in sp) and p not in confirmed:
+            flags.append("yeni transfer, doğrulanamadı")
+        if p in rumors:
+            flags.append("söylenti silindi: " + " / ".join(rumors[p]))
         if any(s["start"] and s["end"] and s["end"] - s["start"] > 20 for s in sp):
             flags.append("uzun dönem")
         if any(not s["start"] for s in sp):
