@@ -19,7 +19,7 @@ export const NATIONS: Record<string, [flag: string, region: string]> = {
 
 export const CAPS = ["0", "1–20", "21–50", "51–100", "100+"];
 
-export const HEADS = ["Futbolcu", "Pozisyon", "Uyruk", "Türk kulüpleri", "Doğum yılı", "Dönem", "Şampiyonluk", "Milli maç", "Durum"];
+export const HEADS = ["Futbolcu", "Pozisyon", "Uyruk", "Kulüpler", "Doğum yılı", "Dönem", "Şampiyonluk", "Milli maç", "Durum"];
 
 /** Tahmin satırındaki özellik kutularının sırası (paylaşım metni de bu sırayı kullanır). */
 export const TILE_KEYS = ["pos", "nat", "clubs", "born", "era", "titles", "caps", "active"] as const;

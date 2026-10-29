@@ -1,7 +1,7 @@
 import type { Player, Position } from "./types";
 
 // Taslak veri: değerler elle girildi ve kural belgesine göre yeniden kurulacak.
-// [ad, pozisyon, uyruk, doğum yılı, Türk kulüpleri, Süper Lig şampiyonluğu, milli maç aralığı (0-4), aktif mi, dönem]
+// [ad, pozisyon, uyruk, doğum yılı, kulüpler (Türkiye'de oynamamışsa yabancı kulüpler), Süper Lig şampiyonluğu, milli maç aralığı (0-4), aktif mi, dönem]
 type Row = [string, Position, string, number, string[], number, number, 0 | 1, number];
 
 const ROWS: Row[] = [

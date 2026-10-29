@@ -6,7 +6,7 @@ Türk futbolu için günlük futbolcu tahmin oyunu. Her gün herkese aynı gizli
 | --- | --- | --- |
 | Pozisyon | Aynı mevki | Aynı mevki grubu |
 | Uyruk | Aynı ülke | Aynı bölge |
-| Türk kulüpleri | Kulüp listesi aynı | En az bir ortak kulüp |
+| Kulüpler | Kulüp listesi aynı | En az bir ortak kulüp |
 | Doğum yılı | Aynı yıl | En fazla 3 yıl fark (↑↓) |
 | Dönem | Aynı on yıl | Komşu on yıl (↑↓) |
 | Süper Lig şampiyonluğu | Aynı sayı | En fazla 1 fark (↑↓) |
@@ -37,7 +37,7 @@ npm run build    # dist/ klasörüne statik site
 
 ## Veri
 
-- `scripts/wikidata_candidates.py`: Wikidata'dan 1959 sonrası Türk kulüplerinde oynamış futbolcuları çeker ve `data/candidates.csv` dosyasına yazar. Liste, oyuncunun Türkçe Wikipedia sayfasının son 12 aydaki okunma sayısına göre sıralanır; `puan_onerisi` bu sıraya göre 1–5 arası bir başlangıç önerisidir, asıl bilinirlik puanı elle verilir. `kontrol` sütunu elle bakılması gereken satırları gösterir. Çalıştırmak için: `python3 scripts/wikidata_candidates.py` (ham sorgular `data/raw/` altında önbelleğe alınır; `--fresh` ile yeniden çekilir).
+- `scripts/wikidata_candidates.py`: Wikidata'dan 1959 sonrası Türk kulüplerinde ya da Türkiye A milli takımında oynamış futbolcuları çeker (`giris` sütunu hangi yoldan girdiğini söyler; Türkiye'de oynamamış milli oyuncuların `kulupler` sütununda yabancı kulüpleri yer alır) ve `data/candidates.csv` dosyasına yazar. Liste, oyuncunun Türkçe Wikipedia sayfasının son 12 aydaki okunma sayısına göre sıralanır; `puan_onerisi` bu sıraya göre 1–5 arası bir başlangıç önerisidir, asıl bilinirlik puanı elle verilir. `kontrol` sütunu elle bakılması gereken satırları gösterir. Çalıştırmak için: `python3 scripts/wikidata_candidates.py` (ham sorgular `data/raw/` altında önbelleğe alınır; `--fresh` ile yeniden çekilir).
 - `data/exclude.csv`: Oyuna hiç alınmayacak oyuncular ve nedeni.
 
 ## Durum

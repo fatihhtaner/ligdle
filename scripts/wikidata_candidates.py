@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Ligdle aday listesi: Wikidata'dan 1959'dan sonra Türk kulüplerinde oynamış futbolcuları çeker.
+"""Ligdle aday listesi: Wikidata'dan Türk futboluyla bağı olan futbolcuları çeker.
+
+İki giriş yolu var: 1959'dan sonra bir Türk kulübünde oynamak ya da 1959'dan sonra Türkiye A milli
+takımında oynamak. Türkiye'de hiç oynamamış milli oyuncuların kulüp listesi yabancı kulüplerinden oluşur.
 
 Çıktı: data/candidates.csv (Türkçe Wikipedia okunmasına göre sıralı, elle gözden geçirmek için).
 Ham sorgu sonuçları data/raw/ altında önbelleğe alınır; --fresh ile yeniden çekilir.
@@ -32,6 +35,7 @@ NATIONAL_TEAM = "Q6979593"
 FOOTBALLER = "Q937857"
 MALE = "Q6581097"
 TURKEY = "Q43"
+TURKEY_NT = "Q483856"  # Türkiye A milli futbol takımı
 CURRENT_YEAR = time.localtime().tm_year
 FIRST_SEASON = 1959  # Milli Lig'in ilk sezonu
 
@@ -146,6 +150,32 @@ def fetch_national(ids):
         national |= {qid(b, "team") for b in rows}
         time.sleep(1)
     return [r for r in out if r["team"] in national]
+
+
+def fetch_turkey_caps():
+    """Türkiye A milli takımında oynamış futbolcular, milli takım dönem yıllarıyla."""
+    rows = sparql(f"""SELECT ?p ?start ?end WHERE {{
+      ?p p:P54 ?st . ?st ps:P54 wd:{TURKEY_NT} .
+      ?p wdt:P21 wd:{MALE} .
+      OPTIONAL {{ ?st pq:P580 ?start }} OPTIONAL {{ ?st pq:P582 ?end }}
+    }}""")
+    return [{"p": qid(b, "p"), "start": year(b, "start"), "end": year(b, "end")} for b in rows]
+
+
+def fetch_all_spells(ids):
+    """Oyuncuların bütün takım dönemleri (milli takımlar ayıklanmadan)."""
+    out = []
+    for i, batch in enumerate(chunks(ids, 100)):
+        print(f"  kariyer grubu {i + 1}/{(len(ids) + 99) // 100}", file=sys.stderr)
+        rows = sparql(f"""SELECT ?p ?club ?start ?end WHERE {{
+          VALUES ?p {{ {values(batch)} }}
+          ?p p:P54 ?st . ?st ps:P54 ?club .
+          OPTIONAL {{ ?st pq:P580 ?start }} OPTIONAL {{ ?st pq:P582 ?end }}
+        }}""")
+        out += [{"p": qid(b, "p"), "club": qid(b, "club"), "start": year(b, "start"),
+                 "end": year(b, "end"), "apps": None} for b in rows]
+        time.sleep(1)
+    return out
 
 
 def fetch_labels(ids):
@@ -282,22 +312,37 @@ def main():
     for s in spells:
         if s["p"] not in excluded and s["club"] in clubs:
             by_player[s["p"]].append(s)
-    ids = sorted(by_player)
-    print(f"  {len(ids)} oyuncu ({len(excluded)} hariç tutuldu)", file=sys.stderr)
+    print(f"  {len(by_player)} oyuncu ({len(excluded)} hariç tutuldu)", file=sys.stderr)
+
+    # Türkiye'de oynamamış ama 1959'dan sonra Türkiye A milli takımına çıkmış oyuncular. Kulüp listeleri
+    # yabancı kulüplerinden kurulur; milli takımlar ve gençlik / B takımları aşağıda ayıklanır.
+    print("Türkiye'de oynamamış milli oyuncular…", file=sys.stderr)
+    nt_years = defaultdict(list)
+    for r in cached("turkey_caps", fetch_turkey_caps):
+        nt_years[r["p"]] += [y for y in (r["start"], r["end"]) if y]
+    abroad = sorted(p for p, ys in nt_years.items()
+                    if p not in by_player and p not in excluded and (not ys or max(ys) >= FIRST_SEASON))
+    abroad_spells = cached("abroad_spells", lambda: fetch_all_spells(abroad))
+    print(f"  {len(abroad)} oyuncu", file=sys.stderr)
+    home = sorted(by_player)
+    ids = sorted(set(home) | set(abroad))
 
     print("Oyuncu bilgileri…", file=sys.stderr)
     people = defaultdict(lambda: defaultdict(set))
-    for r in cached("people", lambda: fetch_people(ids)):
+    for r in cached("people", lambda: fetch_people(home)) + cached("people_abroad", lambda: fetch_people(abroad)):
         for k, v in r.items():
             if v and k != "p":
                 people[r["p"]][k].add(v)
 
     print("Milli takımlar…", file=sys.stderr)
-    national = cached("national", lambda: fetch_national(ids))
+    national = cached("national", lambda: fetch_national(home)) + cached(
+        "national_abroad", lambda: fetch_national(abroad))
 
     label_ids = {v for p in people.values() for k in ("sport", "cit", "pos") for v in p[k]}
-    label_ids |= {n["team"] for n in national}
+    label_ids |= {n["team"] for n in national} | {s["club"] for s in abroad_spells}
     labels = cached("labels", lambda: fetch_labels(label_ids))
+    # Önbellek eski bir oyuncu listesiyle kurulmuşsa eksik etiketleri ayrıca çek.
+    labels |= cached("labels_extra", lambda: fetch_labels(label_ids - set(labels)))
 
     # Bu yıl başlayıp hâlâ süren kulüp dönemleri Wikidata'da bazen söylentiden ibaret. İngilizce
     # Wikipedia'nın güncel kulübü başka bir kulüp diyorsa o dönem silinir; doğrulanamayanlar işaretli kalır.
@@ -323,6 +368,17 @@ def main():
         return not any(w in name for w in ("under", "yaş altı", "u-1", "u-2", "u1", "u2", "youth", "olympic", "olimpik",
                                             "genç", "ümit", " b ", "b national", "amateur", "amatör", "a2"))
 
+    national_teams = {n["team"] for n in national}
+    def first_team(club):  # yedek takımlar: "Nürnberg II", "Juventus Next Gen", "Braga B"
+        name = labels.get(club, "")
+        return senior(club) and not re.search(r"\s(II|B|Next Gen|U\d\d|Reserves?)$", name)
+    # Wikidata'da Türkiye A milli takımı yanlışlıkla yazılmış yabancılar (Ricardo Rocha gibi) elenir.
+    abroad_set = {p for p in abroad if "Türkiye" in {labels.get(x) for x in people[p]["sport"] | people[p]["cit"]}}
+    for s in abroad_spells:
+        if s["p"] in abroad_set and s["club"] not in national_teams and s["club"] != TURKEY_NT and first_team(s["club"]):
+            clubs.setdefault(s["club"], labels.get(s["club"], s["club"]))
+            by_player[s["p"]].append(s)
+
     caps = {}
     for n in national:
         if senior(n["team"]):
@@ -332,7 +388,7 @@ def main():
                 caps[n["p"]] = (labels.get(n["team"], n["team"]), apps)
 
     print("Türkçe Wikipedia okunma sayıları…", file=sys.stderr)
-    trwiki = cached("trwiki", lambda: fetch_trwiki(ids))
+    trwiki = cached("trwiki", lambda: fetch_trwiki(home)) | cached("trwiki_abroad", lambda: fetch_trwiki(abroad))
     views = fetch_views(trwiki.values())
     start, end = views_window()
     print(f"  {len(trwiki)} oyuncunun Türkçe makalesi var ({start}–{end})", file=sys.stderr)
@@ -341,19 +397,28 @@ def main():
     for p in ids:
         info = people[p]
         name = next(iter(info["tr"]), None) or next(iter(info["en"]), None) or p
-        sp = sorted(by_player[p], key=lambda s: (s["start"] or 9999, s["end"] or 9999))
+        sp = sorted(by_player.get(p, []), key=lambda s: (s["start"] or 9999, s["end"] or 9999))
         # Söylenti dönemi silinince Türk kulübü kalmayan oyuncu listeye girmez. Mevkisi de tarihli tek
         # kulüp dönemi de olmayanlar çoğunlukla başkan, oyuncu ya da sanatçı (Wikidata'da "futbolcu" da yazıyor).
         if not sp or (not info["pos"] and not any(s["start"] for s in sp)):
             continue
+        merged = []
+        for s in sp:  # aynı kulübün art arda gelen dönemleri tek dönem sayılır
+            if merged and merged[-1]["club"] == s["club"]:
+                merged[-1] = {**merged[-1], "end": s["end"] if s["end"] and merged[-1]["end"] else None}
+            else:
+                merged.append(dict(s))
         club_txt = "; ".join(
-            f"{clubs.get(s['club'], s['club'])} ({s['start'] or '?'}–{s['end'] or ''})" for s in sp)
+            f"{clubs.get(s['club'], s['club'])} ({s['start'] or '?'}–{s['end'] or ''})" for s in merged)
         starts = [s["start"] for s in sp if s["start"]]
         ends = [s["end"] or s["start"] for s in sp if s["end"] or s["start"]]
         born = min((int(b[:4]) for b in info["born"] if b[:4].isdigit()), default="")
         # Kural: 1959'dan (Milli Lig) sonra Türkiye'de oynamış olmalı. Türkiye kariyeri daha önce
         # bitenler ya da tarihi hiç yokken 1959'da 38 yaşını geçmiş olanlar elenir.
-        if (ends and max(ends) < FIRST_SEASON) or (not ends and born and born < FIRST_SEASON - 38):
+        if p in abroad and p not in abroad_set:
+            continue
+        if p not in abroad_set and (
+                (ends and max(ends) < FIRST_SEASON) or (not ends and born and born < FIRST_SEASON - 38)):
             continue
         nation = sorted(labels.get(x, x) for x in (info["sport"] or info["cit"]))
         team, apps = caps.get(p, ("", None))
@@ -368,9 +433,12 @@ def main():
             flags.append("uzun dönem")
         if any(not s["start"] for s in sp):
             flags.append("tarihsiz dönem")
+        if p in abroad_set:
+            flags.append("Wikidata'da Türk kulübü yok: Türkiye'de gerçekten oynamadığını doğrula")
         rows.append({
             "qid": p,
             "ad": name,
+            "giris": "Türkiye A milli takımı" if p in abroad_set else "Türk kulübü",
             "puan_onerisi": "",
             "trwiki_okunma_12ay": views.get(trwiki.get(p), 0) or 0,
             "wikipedia_dil_sayisi": max((int(x) for x in info["links"]), default=0),
@@ -378,9 +446,9 @@ def main():
             "olum": "evet" if info["died"] else "",
             "uyruk": " / ".join(nation),
             "pozisyon": " / ".join(sorted(labels.get(x, x) for x in info["pos"])),
-            "turk_kulupleri": club_txt,
-            "turkiye_ilk_yil": min(starts, default=""),
-            "turkiye_son_yil": max(ends, default=""),
+            "kulupler": club_txt,
+            "kariyer_ilk_yil": min(starts, default=""),
+            "kariyer_son_yil": max(ends, default=""),
             "a_milli_takim": team,
             "a_milli_mac": "" if apps is None else apps,
             "kontrol": ", ".join(flags),
