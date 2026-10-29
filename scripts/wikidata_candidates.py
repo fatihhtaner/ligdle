@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ligdle aday listesi: Wikidata'dan 1959'dan sonra Türk kulüplerinde oynamış futbolcuları çeker.
 
-Çıktı: data/candidates.csv (bilinirliğe göre sıralı, elle gözden geçirmek için).
+Çıktı: data/candidates.csv (Türkçe Wikipedia okunmasına göre sıralı, elle gözden geçirmek için).
 Ham sorgu sonuçları data/raw/ altında önbelleğe alınır; --fresh ile yeniden çekilir.
 data/exclude.csv içindeki oyuncular listeye hiç girmez.
 
@@ -159,6 +159,73 @@ def fetch_labels(ids):
     return out
 
 
+def fetch_trwiki(ids):
+    """Oyuncunun Türkçe Wikipedia makale başlığı (varsa)."""
+    out = {}
+    for batch in chunks(ids, 300):
+        rows = sparql(f"""SELECT ?p ?title WHERE {{
+          VALUES ?p {{ {values(batch)} }}
+          ?article schema:about ?p ; schema:isPartOf <https://tr.wikipedia.org/> ; schema:name ?title .
+        }}""")
+        out.update({qid(b, "p"): val(b, "title") for b in rows})
+        time.sleep(1)
+    return out
+
+
+def views_window():
+    """Son 12 tamamlanmış ay, Wikimedia API biçiminde (YYYYMMDD)."""
+    t = time.localtime()
+    end_y, end_m = (t.tm_year, t.tm_mon - 1) if t.tm_mon > 1 else (t.tm_year - 1, 12)
+    start_y, start_m = (end_y - 1, end_m + 1) if end_m < 12 else (end_y, 1)
+    return f"{start_y}{start_m:02d}01", f"{end_y}{end_m:02d}28"
+
+
+def fetch_views(titles):
+    """Türkçe Wikipedia'da son 12 ayın okunma sayısı. Başlık başına bir istek; önbellek kaldığı yerden devam eder."""
+    from concurrent.futures import ThreadPoolExecutor
+    path = RAW / "trwiki_views.json"
+    start, end = views_window()
+    cache = json.loads(path.read_text()) if path.exists() and not FRESH else {}
+    if cache.get("_window") != [start, end]:
+        cache = {"_window": [start, end]}
+    todo = sorted({t for t in titles if t not in cache})
+
+    def one(title):
+        url = ("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/tr.wikipedia/all-access/user/"
+               f"{urllib.parse.quote(title.replace(' ', '_'), safe='')}/monthly/{start}/{end}")
+        for attempt in range(4):
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    return title, sum(i["views"] for i in json.load(r)["items"])
+            except urllib.error.HTTPError as e:
+                if e.code == 404:
+                    return title, 0
+                time.sleep(2 * (attempt + 1))
+            except Exception:
+                time.sleep(2 * (attempt + 1))
+        return title, None
+
+    with ThreadPoolExecutor(6) as pool:
+        for i, (title, n) in enumerate(pool.map(one, todo), 1):
+            if n is not None:
+                cache[title] = n
+            if i % 500 == 0:
+                print(f"  okunma {i}/{len(todo)}", file=sys.stderr)
+                path.write_text(json.dumps(cache, ensure_ascii=False))
+    RAW.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(cache, ensure_ascii=False))
+    return cache
+
+
+def score_suggestion(rank):
+    """Okunma sırasına göre ilk bilinirlik önerisi; asıl puan elle verilir (kural belgesi)."""
+    for limit, score in ((150, 5), (500, 4), (1000, 3), (2000, 2)):
+        if rank <= limit:
+            return score
+    return 1
+
+
 def main():
     excluded = {r["qid"]: r for r in csv.DictReader(EXCLUDE.open(encoding="utf-8"))}
 
@@ -204,6 +271,12 @@ def main():
             if not prev or (apps or 0) > (prev[1] or 0):
                 caps[n["p"]] = (labels.get(n["team"], n["team"]), apps)
 
+    print("Türkçe Wikipedia okunma sayıları…", file=sys.stderr)
+    trwiki = cached("trwiki", lambda: fetch_trwiki(ids))
+    views = fetch_views(trwiki.values())
+    start, end = views_window()
+    print(f"  {len(trwiki)} oyuncunun Türkçe makalesi var ({start}–{end})", file=sys.stderr)
+
     rows = []
     for p in ids:
         info = people[p]
@@ -232,6 +305,8 @@ def main():
         rows.append({
             "qid": p,
             "ad": name,
+            "puan_onerisi": "",
+            "trwiki_okunma_12ay": views.get(trwiki.get(p), 0) or 0,
             "wikipedia_dil_sayisi": max((int(x) for x in info["links"]), default=0),
             "dogum_yili": born,
             "olum": "evet" if info["died"] else "",
@@ -246,7 +321,10 @@ def main():
             "wikidata": f"https://www.wikidata.org/wiki/{p}",
         })
 
-    rows.sort(key=lambda r: -r["wikipedia_dil_sayisi"])
+    # Türk futbolseverin tanıdığı oyuncuyu en iyi Türkçe Wikipedia okunması gösteriyor; eşitlikte dil sayısı.
+    rows.sort(key=lambda r: (-r["trwiki_okunma_12ay"], -r["wikipedia_dil_sayisi"]))
+    for rank, r in enumerate(rows, 1):
+        r["puan_onerisi"] = score_suggestion(rank)
     with OUT.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
