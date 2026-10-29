@@ -145,7 +145,6 @@ export default function App() {
       <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
 
       <footer>
-        <p>Prototip. Oyuncu verileri Wikipedia ve Wikidata'dan derlendi, elle kontrolü sürüyor. Şampiyonluklar 2025–26 sezonu sonuna kadar sayılır; kulüpler Türkiye'deki kulüplerdir (Türkiye'de oynamamış milli oyuncularda yurt dışı kulüpleri).</p>
         <p>Veri setinde {PLAYERS.length} oyuncu var.</p>
       </footer>
     </div>
