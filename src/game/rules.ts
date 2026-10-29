@@ -1,4 +1,4 @@
-import type { Comparison, Player, Position, Verdict } from "./types";
+import type { Comparison, Level, Player, Position, Verdict } from "./types";
 
 export const POS_LABEL: Record<Position, string> = {
   "Kaleci": "Kaleci", "Stoper": "Stoper", "Sol bek": "Sol bek", "Sağ bek": "Sağ bek",
@@ -49,3 +49,11 @@ export function compare(g: Player, a: Player): Comparison {
 /** Türkçe harflere duyarsız arama: "sukur" → "Şükür", "ilhan" → "İlhan". */
 export const norm = (s: string) =>
   s.toLocaleLowerCase("tr").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+/** Cevap olabilecek en düşük bilinirlik puanı (kural belgesi: günlük 4–5, normal 3–5, zor herkes) */
+const MIN_FAME = { daily: 4, normal: 3, hard: 1 } as const;
+
+/** Verilen modda cevap olabilecek oyuncuların PLAYERS içindeki sıraları */
+export function answerPool(players: Player[], level: Level | "daily"): number[] {
+  return players.flatMap((p, i) => p.fame >= MIN_FAME[level] ? [i] : []);
+}

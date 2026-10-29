@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { dailyAnswer, dailyOrder, dayNumber } from "./daily";
 import { PLAYERS } from "./players";
-import { arrowOf, compare, NATIONS, norm } from "./rules";
+import { answerPool, arrowOf, compare, NATIONS, norm } from "./rules";
 import type { Player } from "./types";
 
 const p = (over: Partial<Player>): Player => ({
   name: "Test", pos: "Santrfor", nat: "Türkiye", born: 1990, clubs: ["Galatasaray"],
-  titles: 2, caps: 2, active: false, era: 2010, ...over,
+  titles: 2, caps: 2, active: false, era: 2010, fame: 5, ...over,
 });
 
 describe("compare", () => {
@@ -79,5 +79,14 @@ describe("günlük oyuncu", () => {
 describe("veri", () => {
   it("her oyuncunun uyruğu bölge tablosunda var", () => {
     for (const pl of PLAYERS) expect(NATIONS[pl.nat], pl.name).toBeDefined();
+  });
+});
+
+describe("cevap havuzu", () => {
+  it("günlük 4–5, normal 3–5, zor herkes", () => {
+    const ps = [1, 2, 3, 4, 5].map(fame => p({ fame }));
+    expect(answerPool(ps, "daily")).toEqual([3, 4]);
+    expect(answerPool(ps, "normal")).toEqual([2, 3, 4]);
+    expect(answerPool(ps, "hard")).toEqual([0, 1, 2, 3, 4]);
   });
 });

@@ -88,6 +88,9 @@ h1 img { height: clamp(56px, 13vw, 88px); width: auto; }
   transition: color .3s;
 }
 .modes button[aria-pressed="true"] { color: var(--accent-fg); }
+.modes.small { padding: 3px; }
+.modes.small::before { top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); }
+.modes.small button { font-size: 13px; padding: 6px 16px; }
 @media (prefers-reduced-motion: reduce) { .modes::before { transition: none; } }
 
 .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }

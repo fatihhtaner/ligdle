@@ -4,22 +4,30 @@ import { SearchBox } from "./components/SearchBox";
 import { WinBox } from "./components/WinBox";
 import { dailyAnswer, dateKey, dayNumber, untilMidnight } from "./game/daily";
 import { PLAYERS } from "./game/players";
+import { answerPool } from "./game/rules";
 import { shareText } from "./game/share";
 import { dailyKey, store } from "./game/storage";
-import type { GameState } from "./game/types";
+import type { GameState, Level } from "./game/types";
 
 const BASE = import.meta.env.BASE_URL;
+const LEVEL_KEY = "ligdle:level";
+const DAILY_POOL = answerPool(PLAYERS, "daily");
 
-function dailyGame(): GameState {
-  const answer = dailyAnswer(PLAYERS.length);
-  const guesses = store.get<{ guesses: number[] }>(dailyKey(dateKey()))?.guesses ?? [];
-  return { mode: "daily", answer, guesses, won: guesses.includes(answer), revealed: false };
+function savedLevel(): Level {
+  return store.get<Level>(LEVEL_KEY) === "hard" ? "hard" : "normal";
 }
 
-function freeGame(previous: number): GameState {
+function dailyGame(): GameState {
+  const answer = DAILY_POOL[dailyAnswer(DAILY_POOL.length)];
+  const guesses = store.get<{ guesses: number[] }>(dailyKey(dateKey()))?.guesses ?? [];
+  return { mode: "daily", level: savedLevel(), answer, guesses, won: guesses.includes(answer), revealed: false };
+}
+
+function freeGame(previous: number, level: Level): GameState {
+  const pool = answerPool(PLAYERS, level);
   let answer;
-  do { answer = Math.floor(Math.random() * PLAYERS.length); } while (PLAYERS.length > 1 && answer === previous);
-  return { mode: "free", answer, guesses: [], won: false, revealed: false };
+  do { answer = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && answer === previous);
+  return { mode: "free", level, answer, guesses: [], won: false, revealed: false };
 }
 
 export default function App() {
@@ -54,6 +62,12 @@ export default function App() {
     return () => { clearInterval(id); clearTimeout(winTimer.current); };
   }, []);
 
+  const setLevel = (level: Level) => {
+    if (level === game.level) return;
+    store.set(LEVEL_KEY, level);
+    reset(freeGame(game.answer, level));
+  };
+
   const guess = (i: number) => {
     if (game.won || game.revealed || game.guesses.includes(i)) return;
     const next = { ...game, guesses: [...game.guesses, i], won: i === game.answer };
@@ -82,7 +96,7 @@ export default function App() {
           <p className="tagline">Türk futbolundan günün oyuncusunu bul. Her tahmin seni cevaba biraz daha yaklaştırır.</p>
         </div>
         <div className="meta">
-          {game.mode === "daily" ? "Günün oyuncusu" : "Serbest oyun"}
+          {game.mode === "daily" ? "Günün oyuncusu" : game.level === "hard" ? "Serbest · Zor" : "Serbest oyun"}
           <strong>{game.mode === "daily" ? `#${day + 1}` : "∞"}</strong>
           {game.guesses.length} tahmin
         </div>
@@ -91,12 +105,16 @@ export default function App() {
       <div className="bar">
         <div className="modes" data-mode={game.mode} role="group" aria-label="Oyun modu">
           <button aria-pressed={game.mode === "daily"} onClick={() => game.mode !== "daily" && reset(dailyGame())}>Günlük</button>
-          <button aria-pressed={game.mode === "free"} onClick={() => game.mode !== "free" && reset(freeGame(game.answer))}>Serbest</button>
+          <button aria-pressed={game.mode === "free"} onClick={() => game.mode !== "free" && reset(freeGame(game.answer, game.level))}>Serbest</button>
         </div>
         {game.mode === "free" && (
           <div className="right">
+            <div className="modes small" data-mode={game.level === "hard" ? "free" : "daily"} role="group" aria-label="Zorluk">
+              <button aria-pressed={game.level === "normal"} onClick={() => setLevel("normal")}>Normal</button>
+              <button aria-pressed={game.level === "hard"} onClick={() => setLevel("hard")}>Zor</button>
+            </div>
             <button className="ghost" onClick={() => { reset({ ...game, revealed: true }); }}>Cevabı göster</button>
-            <button className="ghost" onClick={() => reset(freeGame(game.answer))}>Yeni oyuncu</button>
+            <button className="ghost" onClick={() => reset(freeGame(game.answer, game.level))}>Yeni oyuncu</button>
           </div>
         )}
       </div>
@@ -111,7 +129,7 @@ export default function App() {
           late={lateWin}
           clock={untilMidnight(now)}
           shareText={() => shareText(game, PLAYERS, day)}
-          onAgain={() => reset(freeGame(game.answer))}
+          onAgain={() => reset(freeGame(game.answer, game.level))}
         />
       )}
 
@@ -127,7 +145,7 @@ export default function App() {
       <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
 
       <footer>
-        <p>Prototip. Oyuncu verileri taslaktır ve elle kontrol edilmelidir. Şampiyonluklar 2024–25 sezonu sonuna kadar sayılır; kulüpler yalnızca Türkiye'deki kulüplerdir.</p>
+        <p>Prototip. Oyuncu verileri taslaktır ve elle kontrol edilmelidir. Şampiyonluklar 2024–25 sezonu sonuna kadar sayılır; kulüpler Türkiye'deki kulüplerdir (Türkiye'de oynamamış milli oyuncularda yurt dışı kulüpleri).</p>
         <p>Veri setinde {PLAYERS.length} oyuncu var.</p>
       </footer>
     </div>
