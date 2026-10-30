@@ -471,7 +471,11 @@ def main():
                 if cq in turkish:
                     sp.append({**s, "q": cq, "name": club_name(turkish[cq])})
                 elif abroad:
-                    sp.append({**s, "q": cq, "name": club_name(s["text"])})
+                    sp.append({**s, "q": cq, "name": club_name(s["text"]), "foreign": True})
+            # Wikidata'da Türk kulübü eksik ama bilgi kutusunda var: aslında Türkiye'de oynamış
+            if abroad and any(not s.get("foreign") for s in sp):
+                sp = [s for s in sp if not s.get("foreign")]
+                flags.append("Türkiye'de oynamış (Wikidata eksik)")
         if not sp:  # bilgi kutusu yok ya da Türk kulübü bulunamadı: Wikidata dönemleri
             for part in filter(None, r["kulupler"].split("; ")):
                 m = re.match(r"(.+) \((\d{4}|\?)–(\d{4})?\)$", part)

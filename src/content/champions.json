@@ -1,0 +1,974 @@
+[
+ {
+  "season": "1959",
+  "winner": "Fenerbahçe",
+  "second": "Galatasaray",
+  "third": null,
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 11
+ },
+ {
+  "season": "1959–60",
+  "winner": "Beşiktaş",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 33
+ },
+ {
+  "season": "1960–61",
+  "winner": "Fenerbahçe",
+  "second": "Galatasaray",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 36
+ },
+ {
+  "season": "1961–62",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Fikri Elma",
+    "nat": "TUR",
+    "club": "Ankara Demirspor"
+   }
+  ],
+  "goals": 21
+ },
+ {
+  "season": "1962–63",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 38
+ },
+ {
+  "season": "1963–64",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Güven Önüt",
+    "nat": "TUR",
+    "club": "Beşiktaş"
+   }
+  ],
+  "goals": 19
+ },
+ {
+  "season": "1964–65",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "1965–66",
+  "winner": "Beşiktaş",
+  "second": "Galatasaray",
+  "third": "Gençlerbirliği",
+  "scorers": [
+   {
+    "name": "Ertan Adatepe",
+    "nat": "TUR",
+    "club": "Ankaragücü"
+   }
+  ],
+  "goals": 20
+ },
+ {
+  "season": "1966–67",
+  "winner": "Beşiktaş",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Ertan Adatepe",
+    "nat": "TUR",
+    "club": "Ankaragücü"
+   }
+  ],
+  "goals": 18
+ },
+ {
+  "season": "1967–68",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Fevzi Zemzem",
+    "nat": "TUR",
+    "club": "Göztepe"
+   }
+  ],
+  "goals": 19
+ },
+ {
+  "season": "1968–69",
+  "winner": "Galatasaray",
+  "second": "Eskişehirspor",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Metin Oktay",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "1969–70",
+  "winner": "Fenerbahçe",
+  "second": "Eskişehirspor",
+  "third": "Altay",
+  "scorers": [
+   {
+    "name": "Fethi Heper",
+    "nat": "TUR",
+    "club": "Eskişehirspor"
+   }
+  ],
+  "goals": 13
+ },
+ {
+  "season": "1970–71",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Göztepe",
+  "scorers": [
+   {
+    "name": "Ogün Altıparmak",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 16
+ },
+ {
+  "season": "1971–72",
+  "winner": "Galatasaray",
+  "second": "Eskişehirspor",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Fethi Heper",
+    "nat": "TUR",
+    "club": "Eskişehirspor"
+   }
+  ],
+  "goals": 20
+ },
+ {
+  "season": "1972–73",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Eskişehirspor",
+  "scorers": [
+   {
+    "name": "Osman Arpacıoğlu",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 16
+ },
+ {
+  "season": "1973–74",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Boluspor",
+  "scorers": [
+   {
+    "name": "Cemil Turan",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 14
+ },
+ {
+  "season": "1974–75",
+  "winner": "Fenerbahçe",
+  "second": "Galatasaray",
+  "third": "Eskişehirspor",
+  "scorers": [
+   {
+    "name": "Ömer Kaner",
+    "nat": "TUR",
+    "club": "Eskişehirspor"
+   }
+  ],
+  "goals": 14
+ },
+ {
+  "season": "1975–76",
+  "winner": "Trabzonspor",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Cemil Turan",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   },
+   {
+    "name": "Ali Osman Renklibay",
+    "nat": "TUR",
+    "club": "Ankaragücü"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "1976–77",
+  "winner": "Trabzonspor",
+  "second": "Fenerbahçe",
+  "third": "Altay",
+  "scorers": [
+   {
+    "name": "Necmi Perekli",
+    "nat": "TUR",
+    "club": "Trabzonspor"
+   }
+  ],
+  "goals": 18
+ },
+ {
+  "season": "1977–78",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Cemil Turan",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "1978–79",
+  "winner": "Trabzonspor",
+  "second": "Galatasaray",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Özer Umdu",
+    "nat": "TUR",
+    "club": "Adanaspor"
+   }
+  ],
+  "goals": 15
+ },
+ {
+  "season": "1979–80",
+  "winner": "Trabzonspor",
+  "second": "Fenerbahçe",
+  "third": "Zonguldakspor",
+  "scorers": [
+   {
+    "name": "Mustafa Denizli",
+    "nat": "TUR",
+    "club": "Altay"
+   },
+   {
+    "name": "Bahtiyar Yorulmaz",
+    "nat": "TUR",
+    "club": "Bursaspor"
+   }
+  ],
+  "goals": 12
+ },
+ {
+  "season": "1980–81",
+  "winner": "Trabzonspor",
+  "second": "Adanaspor",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Bora Öztürk",
+    "nat": "TUR",
+    "club": "Adanaspor"
+   }
+  ],
+  "goals": 15
+ },
+ {
+  "season": "1981–82",
+  "winner": "Beşiktaş",
+  "second": "Trabzonspor",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Selçuk Yula",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 16
+ },
+ {
+  "season": "1982–83",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Selçuk Yula",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 19
+ },
+ {
+  "season": "1983–84",
+  "winner": "Trabzonspor",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Tarik Hodžić",
+    "nat": "YUG",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 16
+ },
+ {
+  "season": "1984–85",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Aykut Yiğit",
+    "nat": "TUR",
+    "club": "Sakaryaspor"
+   }
+  ],
+  "goals": 20
+ },
+ {
+  "season": "1985–86",
+  "winner": "Beşiktaş",
+  "second": "Galatasaray",
+  "third": "Samsunspor",
+  "scorers": [
+   {
+    "name": "Tanju Çolak",
+    "nat": "TUR",
+    "club": "Samsunspor"
+   }
+  ],
+  "goals": 33
+ },
+ {
+  "season": "1986–87",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Samsunspor",
+  "scorers": [
+   {
+    "name": "Tanju Çolak",
+    "nat": "TUR",
+    "club": "Samsunspor"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "1987–88",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Malatyaspor",
+  "scorers": [
+   {
+    "name": "Tanju Çolak",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 39
+ },
+ {
+  "season": "1988–89",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Aykut Kocaman",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 29
+ },
+ {
+  "season": "1989–90",
+  "winner": "Beşiktaş",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Feyyaz Uçar",
+    "nat": "TUR",
+    "club": "Beşiktaş"
+   }
+  ],
+  "goals": 28
+ },
+ {
+  "season": "1990–91",
+  "winner": "Beşiktaş",
+  "second": "Galatasaray",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Tanju Çolak",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 31
+ },
+ {
+  "season": "1991–92",
+  "winner": "Beşiktaş",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Aykut Kocaman",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "1992–93",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Tanju Çolak",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 27
+ },
+ {
+  "season": "1993–94",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Bülent Uygun",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 22
+ },
+ {
+  "season": "1994–95",
+  "winner": "Beşiktaş",
+  "second": "Trabzonspor",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Aykut Kocaman",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 27
+ },
+ {
+  "season": "1995–96",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Shota Arveladze",
+    "nat": "GEO",
+    "club": "Trabzonspor"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "1996–97",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Hakan Şükür",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 38
+ },
+ {
+  "season": "1997–98",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Hakan Şükür",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 33
+ },
+ {
+  "season": "1998–99",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Hakan Şükür",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 19
+ },
+ {
+  "season": "1999–2000",
+  "winner": "Galatasaray",
+  "second": "Beşiktaş",
+  "third": "Gaziantepspor",
+  "scorers": [
+   {
+    "name": "Serkan Aykut",
+    "nat": "TUR",
+    "club": "Samsunspor"
+   }
+  ],
+  "goals": 30
+ },
+ {
+  "season": "2000–01",
+  "winner": "Fenerbahçe",
+  "second": "Galatasaray",
+  "third": "Gaziantepspor",
+  "scorers": [
+   {
+    "name": "Okan Yılmaz",
+    "nat": "TUR",
+    "club": "Bursaspor"
+   }
+  ],
+  "goals": 23
+ },
+ {
+  "season": "2001–02",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Arif Erdem",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   },
+   {
+    "name": "İlhan Mansız",
+    "nat": "TUR",
+    "club": "Beşiktaş"
+   }
+  ],
+  "goals": 21
+ },
+ {
+  "season": "2002–03",
+  "winner": "Beşiktaş",
+  "second": "Galatasaray",
+  "third": "Gençlerbirliği",
+  "scorers": [
+   {
+    "name": "Okan Yılmaz",
+    "nat": "TUR",
+    "club": "Bursaspor"
+   }
+  ],
+  "goals": 24
+ },
+ {
+  "season": "2003–04",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Zafer Biryol",
+    "nat": "TUR",
+    "club": "Konyaspor"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "2004–05",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Fatih Tekke",
+    "nat": "TUR",
+    "club": "Trabzonspor"
+   }
+  ],
+  "goals": 31
+ },
+ {
+  "season": "2005–06",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Gökhan Ünal",
+    "nat": "TUR",
+    "club": "Kayserispor"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "2006–07",
+  "winner": "Fenerbahçe",
+  "second": "Beşiktaş",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Alex",
+    "nat": "BRA",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 19
+ },
+ {
+  "season": "2007–08",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Semih Şentürk",
+    "nat": "TUR",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "2008–09",
+  "winner": "Beşiktaş",
+  "second": "Sivasspor",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Milan Baroš",
+    "nat": "CZE",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 20
+ },
+ {
+  "season": "2009–10",
+  "winner": "Bursaspor",
+  "second": "Fenerbahçe",
+  "third": "Galatasaray",
+  "scorers": [
+   {
+    "name": "Ariza Makukula",
+    "nat": "POR",
+    "club": "Kayserispor"
+   }
+  ],
+  "goals": 21
+ },
+ {
+  "season": "2010–11",
+  "winner": "Fenerbahçe",
+  "second": "Trabzonspor",
+  "third": "Bursaspor",
+  "scorers": [
+   {
+    "name": "Alex",
+    "nat": "BRA",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 28
+ },
+ {
+  "season": "2011–12",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Burak Yılmaz",
+    "nat": "TUR",
+    "club": "Trabzonspor"
+   }
+  ],
+  "goals": 33
+ },
+ {
+  "season": "2012–13",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Burak Yılmaz",
+    "nat": "TUR",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 24
+ },
+ {
+  "season": "2013–14",
+  "winner": "Fenerbahçe",
+  "second": "Galatasaray",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Aatif Chahechouhe",
+    "nat": "MAR",
+    "club": "Sivasspor"
+   }
+  ],
+  "goals": 17
+ },
+ {
+  "season": "2014–15",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Fernandão",
+    "nat": "BRA",
+    "club": "Bursaspor"
+   }
+  ],
+  "goals": 22
+ },
+ {
+  "season": "2015–16",
+  "winner": "Beşiktaş",
+  "second": "Fenerbahçe",
+  "third": "Konyaspor",
+  "scorers": [
+   {
+    "name": "Mario Gómez",
+    "nat": "GER",
+    "club": "Beşiktaş"
+   }
+  ],
+  "goals": 26
+ },
+ {
+  "season": "2016–17",
+  "winner": "Beşiktaş",
+  "second": "Başakşehir",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Vágner Love",
+    "nat": "BRA",
+    "club": "Alanyaspor"
+   }
+  ],
+  "goals": 23
+ },
+ {
+  "season": "2017–18",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Başakşehir",
+  "scorers": [
+   {
+    "name": "Bafétimbi Gomis",
+    "nat": "FRA",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 29
+ },
+ {
+  "season": "2018–19",
+  "winner": "Galatasaray",
+  "second": "Başakşehir",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Mbaye Diagne",
+    "nat": "SEN",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 30
+ },
+ {
+  "season": "2019–20",
+  "winner": "Başakşehir",
+  "second": "Trabzonspor",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Alexander Sørloth",
+    "nat": "NOR",
+    "club": "Trabzonspor"
+   }
+  ],
+  "goals": 24
+ },
+ {
+  "season": "2020–21",
+  "winner": "Beşiktaş",
+  "second": "Galatasaray",
+  "third": "Fenerbahçe",
+  "scorers": [
+   {
+    "name": "Aaron Boupendza",
+    "nat": "GAB",
+    "club": "Hatayspor"
+   }
+  ],
+  "goals": 22
+ },
+ {
+  "season": "2021–22",
+  "winner": "Trabzonspor",
+  "second": "Fenerbahçe",
+  "third": "Konyaspor",
+  "scorers": [
+   {
+    "name": "Umut Bozok",
+    "nat": "TUR",
+    "club": "Kasımpaşa"
+   }
+  ],
+  "goals": 20
+ },
+ {
+  "season": "2022–23",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Beşiktaş",
+  "scorers": [
+   {
+    "name": "Enner Valencia",
+    "nat": "ECU",
+    "club": "Fenerbahçe"
+   }
+  ],
+  "goals": 29
+ },
+ {
+  "season": "2023–24",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Mauro Icardi",
+    "nat": "ARG",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 25
+ },
+ {
+  "season": "2024–25",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Samsunspor",
+  "scorers": [
+   {
+    "name": "Victor Osimhen",
+    "nat": "NGA",
+    "club": "Galatasaray"
+   }
+  ],
+  "goals": 26
+ },
+ {
+  "season": "2025–26",
+  "winner": "Galatasaray",
+  "second": "Fenerbahçe",
+  "third": "Trabzonspor",
+  "scorers": [
+   {
+    "name": "Paul Onuachu",
+    "nat": "NGA",
+    "club": "Trabzonspor"
+   },
+   {
+    "name": "Eldor Shomurodov",
+    "nat": "UZB",
+    "club": "Başakşehir"
+   }
+  ],
+  "goals": 22
+ }
+]

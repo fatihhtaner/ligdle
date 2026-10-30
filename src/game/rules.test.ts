@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dailyAnswer, dailyOrder, dayNumber } from "./daily";
 import { PLAYERS } from "./players";
-import { answerPool, arrowOf, compare, decade, explain, NATIONS, norm } from "./rules";
+import { answerPool, arrowOf, clues, compare, decade, explain, NATIONS, norm, rangeText } from "./rules";
 import type { Player } from "./types";
 
 const p = (over: Partial<Player>): Player => ({
@@ -105,5 +105,36 @@ describe("explain", () => {
     expect(explain("born", p({ born: 1990 }), p({ born: 1992 }))).toBe("En fazla 3 yıl fark var; cevap daha genç.");
     expect(explain("nat", p({ nat: "Belçika" }), p({ nat: "Hollanda" }))).toBe("Ülkeler farklı ama aynı bölgede: Batı Avrupa.");
     expect(explain("active", p({ active: true }), p({ active: false }))).toBe("Cevap emekli.");
+  });
+});
+
+describe("clues", () => {
+  const a = p({ name: "A", born: 1990, era: 2010, titles: 3, caps: 2, nat: "Brezilya", pos: "Kanat", clubs: ["Galatasaray", "Bursaspor"] });
+  it("oklar ve renklerden aralık çıkarır", () => {
+    const c = clues([p({ name: "B", born: 1985, era: 2000, titles: 0, caps: 0, nat: "Arjantin", pos: "Santrfor", clubs: ["Galatasaray"] })], a);
+    expect(rangeText("born", c.range.born)).toBe("1989 ve sonrası");
+    expect(rangeText("era", c.range.era)).toBe("2010'lar");
+    expect(rangeText("titles", c.range.titles)).toBe("en az 2");
+    expect(rangeText("caps", c.range.caps)).toBe("21+");
+    expect(c.pos).toEqual({ exact: false, text: "Hücum grubu" });
+    expect(c.nat?.exact).toBe(false);
+    expect(c.clubs).toEqual(["Galatasaray"]);
+  });
+  it("Türk tahmin kırmızıysa cevap yabancı", () => {
+    expect(clues([p({ name: "B", nat: "Türkiye" })], a).nat).toEqual({ exact: false, text: "Yabancı" });
+  });
+  it("iki taraftan sıkıştırır", () => {
+    const c = clues([p({ name: "B", born: 1988 }), p({ name: "C", born: 1992 })], a);
+    expect(rangeText("born", c.range.born)).toBe("1989–1991");
+  });
+  it("cevap aralığın içinde kalır", () => {
+    const pool = [1975, 1983, 1990, 1994, 2001].map((born, i) => p({ name: `x${i}`, born, era: born + 20 - (born % 10), titles: i, caps: i % 5 }));
+    for (const ans of pool) {
+      const c = clues(pool.filter(g => g !== ans), ans);
+      for (const k of ["born", "era", "titles", "caps"] as const) {
+        expect(ans[k]).toBeGreaterThanOrEqual(c.range[k][0]);
+        expect(ans[k]).toBeLessThanOrEqual(c.range[k][1]);
+      }
+    }
   });
 });

@@ -134,3 +134,61 @@ export function explain(key: (typeof TILE_KEYS)[number], g: Player, a: Player): 
       return v === "hit" ? `İkisi de ${g.active ? "hâlâ oynuyor" : "emekli"}.` : `Cevap ${g.active ? "emekli" : "hâlâ oynuyor"}.`;
   }
 }
+
+/** Sayısal kutularda yeşil, sarı ve kırmızının anlamı: sarı = fark 1 adım ile `near` arasında. */
+const STEPS = { born: [1, 3], era: [10, 10], titles: [1, 1], caps: [1, 1] } as const;
+type NumKey = keyof typeof STEPS;
+
+export interface Clues {
+  pos: { exact: boolean; text: string } | null;
+  nat: { exact: boolean; text: string } | null;
+  clubs: string[];
+  /** Cevabın olabileceği en küçük ve en büyük değer (bilinmiyorsa sonsuz) */
+  range: Record<NumKey, [lo: number, hi: number]>;
+  active: boolean | null;
+}
+
+/** Şimdiye kadarki tahminlerin renk ve oklarından cevap hakkında kesin olarak bilinenler. */
+export function clues(guessed: Player[], a: Player): Clues {
+  const out: Clues = {
+    pos: null, nat: null, clubs: [], active: null,
+    range: { born: [-Infinity, Infinity], era: [-Infinity, Infinity], titles: [-Infinity, Infinity], caps: [-Infinity, Infinity] },
+  };
+  for (const g of guessed) {
+    const c = compare(g, a);
+    if (c.pos === "hit") out.pos = { exact: true, text: POS_LABEL[g.pos] };
+    else if (c.pos === "near" && !out.pos) out.pos = { exact: false, text: `${POS_GROUP[g.pos]} grubu` };
+    if (c.nat === "hit") out.nat = { exact: true, text: `${NATIONS[g.nat][0]} ${g.nat}`.trim() };
+    else if (c.nat === "near" && !out.nat?.exact) out.nat = { exact: false, text: NATIONS[g.nat][1] };
+    // Türkiye tek başına bir bölge: Türk tahmin kırmızıysa cevap yabancıdır
+    else if (c.nat === "miss" && g.nat === "Türkiye" && !out.nat) out.nat = { exact: false, text: "Yabancı" };
+    out.clubs = c.clubs === "hit" ? [...g.clubs] : [...new Set([...out.clubs, ...c.shared])];
+    out.active = c.active === "hit" ? g.active : !g.active;
+    for (const key of Object.keys(STEPS) as NumKey[]) {
+      const [step, near] = STEPS[key], v = g[key], r = out.range[key];
+      const up = a[key] > v, verdict = c[key];
+      // Tahmine uzaklık: yeşil 0, sarı [step, near], kırmızı near'dan fazla
+      const [dLo, dHi] = verdict === "hit" ? [0, 0] : verdict === "near" ? [step, near] : [near + step, Infinity];
+      const lo = up ? v + dLo : v - dHi, hi = up ? v + dHi : v - dLo;
+      out.range[key] = [Math.max(r[0], lo), Math.min(r[1], hi)];
+    }
+  }
+  return out;
+}
+
+const CAP_EDGES = [[0, 0], [1, 20], [21, 50], [51, 100], [101, Infinity]];
+
+/** Clues aralığını kısa metne çevirir: "1988–1991", "1990 ve sonrası", "en az 2". Hiçbir şey bilinmiyorsa null. */
+export function rangeText(key: NumKey, [lo, hi]: [number, number]): string | null {
+  if (lo === -Infinity && hi === Infinity) return null;
+  if (key === "caps") {
+    const a = lo === -Infinity ? 0 : CAP_EDGES[lo][0], b = hi === Infinity ? Infinity : CAP_EDGES[hi][1];
+    return lo === hi ? CAPS[lo] : b === Infinity ? `${a}+` : a === 0 ? `en fazla ${b}` : `${a}–${b}`;
+  }
+  const fmt = key === "era" ? decade : String;
+  if (lo === hi) return fmt(lo);
+  if (key === "titles") return hi === Infinity ? `en az ${lo}` : lo <= 0 || lo === -Infinity ? `en fazla ${hi}` : `${lo}–${hi}`;
+  if (hi === Infinity) return `${fmt(lo)} ve sonrası`;
+  if (lo === -Infinity) return `${fmt(hi)} ve öncesi`;
+  return key === "era" ? `${fmt(lo)}–${fmt(hi)}` : `${lo}–${hi}`;
+}

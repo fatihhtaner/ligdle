@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Board, TILE_STEP } from "./components/Board";
+import { Clues } from "./components/Clues";
 import { HowTo } from "./components/HowTo";
 import { SearchBox } from "./components/SearchBox";
 import { WinBox } from "./components/WinBox";
+import { ARTICLES } from "./content/articles";
 import { dailyAnswer, dateKey, dayNumber, untilMidnight } from "./game/daily";
 import { PLAYERS } from "./game/players";
 import { answerPool } from "./game/rules";
@@ -97,6 +99,10 @@ export default function App() {
   return (
     <div className="wrap">
       <div className="pitch" aria-hidden="true" />
+      <nav className="topnav" aria-label="Bölümler">
+        <a href={`${BASE}rehber/`}>Rehber</a>
+        <a href={`${BASE}arsiv/`}>Arşiv</a>
+      </nav>
       <header>
         <div>
           <h1>
@@ -105,10 +111,10 @@ export default function App() {
           </h1>
           <p className="tagline">Türk futbolundan günün oyuncusunu bul. Her tahmin seni cevaba biraz daha yaklaştırır.</p>
         </div>
-        <div className="meta">
+        <div className={`meta${game.mode === "daily" ? "" : " free"}`}>
           {game.mode === "daily" ? "Günün oyuncusu" : game.level === "hard" ? "Serbest · Zor" : "Serbest oyun"}
           <strong>{game.mode === "daily" ? `#${day + 1}` : "∞"}</strong>
-          {game.guesses.length} tahmin
+          <span>{game.guesses.length} tahmin</span>
           {game.mode === "daily" && stats.streak > 0 && (
             <span className="streak" title={stats.last >= 0 ? "Bugünü de buldun" : "Seriyi sürdürmek için bugünün oyuncusunu bul"}>
               🔥 {stats.streak} günlük seri
@@ -166,8 +172,19 @@ export default function App() {
         <HowTo onClose={game.guesses.length > 0 ? () => setHelp(false) : undefined} />
       )}
 
+      {!done && game.guesses.length > 0 && <Clues players={PLAYERS} answer={game.answer} guesses={game.guesses} />}
+
       <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
 
+      <section className="more" aria-labelledby="more-title">
+        <h2 id="more-title">Oyundan sonra</h2>
+        <ul className="cards">
+          <li><a href={`${BASE}arsiv/`}><strong>Arşiv</strong><span>Daha önceki günlerde hangi oyuncular çıktı?</span></a></li>
+          {ARTICLES.slice(0, 3).map(([slug, title, description]) => (
+            <li key={slug}><a href={`${BASE}rehber/${slug}/`}><strong>{title}</strong><span>{description}</span></a></li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

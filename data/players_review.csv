@@ -314,7 +314,7 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 313,Q24048038,Attila Szalai,4,Stoper,"Centre-back, left-back",Macaristan,Fenerbahçe; Kasımpaşa,1998,2020,0,,53,evet,,,https://en.wikipedia.org/wiki/Attila_Szalai
 314,Q219884,Stefan Savić,4,Stoper,Centre-back,Karadağ,Trabzonspor,1991,2020,0,,81,evet,,,https://en.wikipedia.org/wiki/Stefan_Savi%C4%87
 315,Q375462,Daniel Amokachi,4,Santrfor,Forward,Nijerya,Beşiktaş,1972,1990,0,,44,hayır,,,https://en.wikipedia.org/wiki/Daniel_Amokachi
-316,Q15901932,Kenan Karaman,4,Santrfor,Forward,Türkiye,TSG Hoffenheim; Hannover 96; Fortuna Düsseldorf; Beşiktaş; Schalke 04,1994,2010,0,,31,evet,,,https://en.wikipedia.org/wiki/Kenan_Karaman
+316,Q15901932,Kenan Karaman,4,Santrfor,Forward,Türkiye,Beşiktaş,1994,2020,0,,31,evet,Türkiye'de oynamış (Wikidata eksik),,https://en.wikipedia.org/wiki/Kenan_Karaman
 317,Q10553748,Dele Alli,4,Ofansif OS,Attacking midfielder,İngiltere,Beşiktaş,1996,2020,0,,37,hayır,,,https://en.wikipedia.org/wiki/Dele_Alli
 318,Q184218,Ryan Babel,4,Santrfor,Forward,Hollanda,Kasımpaşa; Beşiktaş; Galatasaray; Eyüpspor,1986,2010,0,,69,hayır,,,https://en.wikipedia.org/wiki/Ryan_Babel
 319,Q727569,Yalçın Ayhan,4,Stoper,Centre back,Türkiye,İstanbulspor; Galatasaray; Kayseri Erciyesspor; Manisaspor; Antalyaspor; Gaziantepspor; Orduspor; Kasımpaşa; Başakşehir; Yeni Malatyaspor; Ankaraspor; Ankaragücü; Karagümrük,1982,2010,1,2005–06,,hayır,,,https://en.wikipedia.org/wiki/Yal%C3%A7%C4%B1n_Ayhan
@@ -443,7 +443,7 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 442,Q569272,Sinan Bolat,4,Kaleci,Goalkeeper,Türkiye,Kayserispor; Galatasaray; Kasımpaşa; Iğdır,1988,2020,1,2014–15,12,hayır,şampiyonluk: kiralık ya da yarım sezon var,,https://en.wikipedia.org/wiki/Sinan_Bolat
 443,Q110970778,Rômulo Cardoso,4,Santrfor,Forward,Brezilya,Göztepe,2002,2020,0,,,evet,,,https://en.wikipedia.org/wiki/R%C3%B4mulo_Cardoso
 444,Q1016271,Burhan Eşer,4,Merkez OS,Midfielder,Türkiye,Diyarbakırspor; Gaziantep; Gençlerbirliği; Eskişehirspor; Mersin İdman Yurdu; Sivasspor; Erzurumspor; Ankaraspor; Akhisar Belediyespor; Bodrum,1985,2010,0,,,hayır,,,https://en.wikipedia.org/wiki/Burhan_E%C5%9Fer
-445,Q440846,Mevlüt Erdinç,4,Santrfor,Forward,Türkiye,Sochaux; Paris Saint-Germain; Rennes; Saint-Étienne; Hannover 96; Guingamp; Metz; Başakşehir; Antalyaspor; Fenerbahçe; Karagümrük; Kocaelispor; Ümraniyespor,1987,2010,0,,34,hayır,,,https://en.wikipedia.org/wiki/Mevl%C3%BCt_Erdin%C3%A7
+445,Q440846,Mevlüt Erdinç,4,Santrfor,Forward,Türkiye,Başakşehir; Antalyaspor; Fenerbahçe; Karagümrük; Kocaelispor; Ümraniyespor,1987,2010,0,,34,hayır,Türkiye'de oynamış (Wikidata eksik),,https://en.wikipedia.org/wiki/Mevl%C3%BCt_Erdin%C3%A7
 446,Q1390540,Yusuf Erdoğan,4,Kanat,winger,Türkiye,Araklıspor; 1461 Trabzon; Trabzonspor; Bursaspor; Kasımpaşa; Adana Demirspor; Konyaspor; Çorum Belediyespor; Erokspor,1992,2010,0,,,evet,,,https://en.wikipedia.org/wiki/Yusuf_Erdo%C4%9Fan
 447,Q27825292,Marcão,4,Stoper,Centre-back,Brezilya,Galatasaray,1996,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Marc%C3%A3o_%28footballer%2C_born_1996%29
 448,Q1373065,Okay Yokuşlu,4,Defansif OS,Defensive midfielder,Türkiye,Altay; Kayserispor; Trabzonspor,1994,2010,0,,47,evet,,,https://en.wikipedia.org/wiki/Okay_Yoku%C5%9Flu
@@ -777,7 +777,7 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 776,Q447646,Eduardo Gonçalves de Oliveira,3,Santrfor,Striker,Brezilya,Beşiktaş,1981,2010,0,,,hayır,,,https://en.wikipedia.org/wiki/Edu_%28footballer%2C_born_1981%29
 777,Q553056,Reinhard Stumpf,3,Stoper,Centre-back,Almanya,Galatasaray,1961,1990,2,1992–93 1993–94,,hayır,,,https://en.wikipedia.org/wiki/Reinhard_Stumpf
 778,Q8079469,Ümit Bozkurt,3,Stoper,Defender,Türkiye,Gençlerbirliği; Konyaspor; Manisaspor; Hacettepe; Diyarbakırspor; Orduspor,1976,2000,0,,,hayır,,,https://en.wikipedia.org/wiki/%C3%9Cmit_Bozkurt
-779,Q507956,Yunus Mallı,3,Ofansif OS,Attacking midfielder,Türkiye,Mainz 05; VfL Wolfsburg; Union Berlin; Trabzonspor; Kasımpaşa; Konyaspor,1992,2010,1,2021–22,25,evet,,,https://en.wikipedia.org/wiki/Yunus_Mall%C4%B1
+779,Q507956,Yunus Mallı,3,Ofansif OS,Attacking midfielder,Türkiye,Trabzonspor; Kasımpaşa; Konyaspor,1992,2020,1,2021–22,25,evet,Türkiye'de oynamış (Wikidata eksik),,https://en.wikipedia.org/wiki/Yunus_Mall%C4%B1
 780,Q3241831,Lionel Carole,3,Sol bek,Left back,Fransa,Galatasaray; Kayserispor,1991,2020,1,2017–18,,evet,,,https://en.wikipedia.org/wiki/Lionel_Carole
 781,Q8068673,Zeki Önatlı,3,Merkez OS,Midfielder,Türkiye,Beşiktaş; Kocaelispor; İstanbulspor,1968,1990,3,1989–90 1990–91 1991–92,5,hayır,,,https://en.wikipedia.org/wiki/Zeki_%C3%96natl%C4%B1
 782,Q310369,Freddy Adu,3,Ofansif OS,"Attacking midfielder, forward",ABD,Rizespor,1989,2010,0,,17,hayır,,,https://en.wikipedia.org/wiki/Freddy_Adu
