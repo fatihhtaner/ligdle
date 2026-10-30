@@ -124,7 +124,7 @@ h1 img { height: clamp(56px, 13vw, 88px); width: auto; }
 }
 .ghost:hover { box-shadow: var(--shadow); }
 
-.search { position: relative; }
+.search { position: sticky; top: 12px; z-index: 6; } /* tahmin edince sayfa kaysa da arama kutusu ekranda kalır */
 .search input {
   width: 100%; font: 500 19px var(--f-body); color: var(--fg);
   background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px 124px 16px 20px;
@@ -186,7 +186,7 @@ button.tile { border: 0; cursor: pointer; font: 600 14px/1.2 var(--f-body); }
 button.tile:hover { filter: brightness(1.04); }
 .tile.picked { box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--accent); }
 .tile .nth { font-size: 11px; font-weight: 500; color: var(--muted); }
-.board-wrap { display: flex; flex-direction: column; gap: 10px; }
+.board-wrap { display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 92px; } /* yapışkan arama kutusunun altında durur */
 .why {
   margin: 0; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: var(--muted);
   background: var(--surface); box-shadow: var(--shadow-sm); min-height: 42px;

@@ -67,6 +67,13 @@ export default function App() {
     return () => { clearInterval(id); clearTimeout(winTimer.current); };
   }, []);
 
+  // Tahminden sonra yeni satıra kaydır: tablo uzun sayfada aşağıda kalıp tahmin boşa gitmiş gibi görünmesin
+  useEffect(() => {
+    if (fresh < 0) return;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    document.querySelector(".board-wrap")?.scrollIntoView({ behavior: motion, block: "start" });
+  }, [fresh]);
+
   const setLevel = (level: Level) => {
     if (level === game.level) return;
     store.set(LEVEL_KEY, level);
