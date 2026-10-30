@@ -70,6 +70,10 @@ h1 img { height: clamp(56px, 13vw, 88px); width: auto; }
 .tagline { margin: 10px 0 0; color: var(--muted); font-size: 16px; max-width: 40ch; }
 .meta { color: var(--muted); font-size: 13px; text-align: right; }
 .meta strong { display: block; font-family: var(--f-display); font-weight: 800; font-size: 34px; color: var(--fg); line-height: 1.1; }
+.meta .streak {
+  display: table; margin: 6px 0 0 auto; padding: 3px 10px; border-radius: 999px;
+  background: var(--surface); color: var(--fg); font-weight: 600; box-shadow: var(--shadow-sm);
+}
 
 /* Two equal halves with a pill that slides under the active one. */
 .modes {

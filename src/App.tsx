@@ -90,6 +90,7 @@ export default function App() {
   const day = dayNumber(now);
   const done = game.won || game.revealed;
   const showWin = done && !revealing;
+  const stats = readStats(dateKey(now));
   const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
   const yesterdayName = dayNumber(yesterday) >= 0 ? PLAYERS[DAILY_POOL[dailyAnswer(DAILY_POOL.length, yesterday)]].name : undefined;
 
@@ -108,6 +109,11 @@ export default function App() {
           {game.mode === "daily" ? "Günün oyuncusu" : game.level === "hard" ? "Serbest · Zor" : "Serbest oyun"}
           <strong>{game.mode === "daily" ? `#${day + 1}` : "∞"}</strong>
           {game.guesses.length} tahmin
+          {game.mode === "daily" && stats.streak > 0 && (
+            <span className="streak" title={stats.last >= 0 ? "Bugünü de buldun" : "Seriyi sürdürmek için bugünün oyuncusunu bul"}>
+              🔥 {stats.streak} günlük seri
+            </span>
+          )}
         </div>
       </header>
 
@@ -140,7 +146,7 @@ export default function App() {
           daily={game.mode === "daily"}
           late={lateWin}
           clock={untilMidnight(now)}
-          stats={game.mode === "daily" ? readStats(dateKey(now)) : undefined}
+          stats={game.mode === "daily" ? stats : undefined}
           yesterday={yesterdayName}
           shareText={() => shareText(game, PLAYERS, day)}
           onAgain={() => reset(freeGame(game.answer, game.level))}
