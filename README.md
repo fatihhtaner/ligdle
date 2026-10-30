@@ -36,7 +36,7 @@ npm run build    # dist/ klasörüne statik site
 - `public/img/`: logo, ikonlar, paylaşım görseli.
 - `hakkinda/`, `gizlilik/`, `kosullar/`, `iletisim/`: oyun dışındaki statik sayfalar. Ortak üst ve alt kısım `src/site/` altında; sayfa listesi, site haritası (`sitemap.xml`) ve `robots.txt` `vite.config.ts` içinde kurulur.
 - `arsiv/`, `rehber/`: arşiv ve rehber yazıları. Yazı listesi `src/content/articles.ts`; sayfalardaki `<!--render:…-->` yerleri ve `{{sayı}}` değerleri derlemede `src/content/render.ts` ile veriden doldurulur. Arşiv günlük değiştiği için site her gece 00:05'te (Türkiye saati) yeniden derlenir.
-- `.env`: sitenin kalıcı adresi (`VITE_SITE_URL`). Kendi alan adına geçince yalnızca burası değişir; kanonik adresler, paylaşım görseli ve site haritası buradan gelir.
+- `.env`: sitenin kalıcı adresi (`VITE_SITE_URL`). Kendi alan adına geçince yalnızca burası değişir; kanonik adresler, paylaşım görseli ve site haritası buradan gelir. AdSense yayıncı kimliği de burada (`VITE_ADSENSE_CLIENT`): her sayfadaki `google-adsense-account` etiketi ve `ads.txt` bundan üretilir.
 
 ## Veri
 

@@ -22,7 +22,7 @@ export function Clues({ players, answer, guesses }: { players: Player[]; answer:
 
   return (
     <section className="clues" aria-labelledby="clues-title">
-      <div className="card-id" aria-hidden="true">
+      <div className="card-id" aria-hidden="true" style={{ ["--p" as string]: found / 8 }}>
         <span className="silhouette">?</span>
         <span className="found">{found}/8</span>
       </div>

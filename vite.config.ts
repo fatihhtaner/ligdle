@@ -20,9 +20,9 @@ const ALL = ["", ...PAGES.map(([path]) => `${path}/`), ...ARTICLES.map(([slug]) 
 
 /**
  * Statik sayfalardaki <!--site-header--> ve <!--site-footer--> yerlerine ortak üst ve alt kısmı koyar,
- * <!--render:…--> yerlerine veriden üretilen tabloları koyar (src/content/render.ts), derlemede sitemap.xml ve robots.txt üretir. Bağlantılar göreli: site alt klasörde de çalışır.
+ * her sayfaya AdSense doğrulama etiketi ekler, <!--render:…--> yerlerine veriden üretilen tabloları koyar (src/content/render.ts), derlemede sitemap.xml, ads.txt ve robots.txt üretir. Bağlantılar göreli: site alt klasörde de çalışır.
  */
-function site(siteUrl: string): Plugin {
+function site(siteUrl: string, adsense: string): Plugin {
   const page = (name: string) => readFileSync(new URL(`./src/site/${name}.html`, import.meta.url), "utf8");
   return {
     name: "ligdle-site",
@@ -31,6 +31,7 @@ function site(siteUrl: string): Plugin {
       const root = depth === "." ? "./" : `${depth}/`;
       const links = PAGES.map(([path, title]) => `<a href="${root}${path}/">${title}</a>`).join("");
       return render(html, root)
+        .replace("</head>", `<meta name="google-adsense-account" content="${adsense}">\n</head>`)
         .replace("<!--site-header-->", page("header").replaceAll("{root}", root))
         .replace("<!--site-footer-->", page("footer").replaceAll("{root}", root).replace("{links}", links));
     },
@@ -40,6 +41,8 @@ function site(siteUrl: string): Plugin {
         source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${
           ALL.map(u => `  <url><loc>${siteUrl}${u}</loc></url>`).join("\n")}\n</urlset>\n`,
       });
+      // Reklam satabilecek tek yetkili hesap: AdSense bunu görmezse "ads.txt eksik" uyarısı verir
+      this.emitFile({ type: "asset", fileName: "ads.txt", source: `google.com, ${adsense.replace("ca-", "")}, DIRECT, f08c47fec0942fa0\n` });
       this.emitFile({ type: "asset", fileName: "robots.txt", source: `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}sitemap.xml\n` });
     },
   };
@@ -48,10 +51,10 @@ function site(siteUrl: string): Plugin {
 // base "./": the build works from any sub-path (GitHub Pages /ligdle/) or straight from disk.
 export default defineConfig(({ mode }) => {
   // Sitenin kalıcı adresi .env dosyasında; alan adı alınınca yalnızca orası değişir.
-  const siteUrl = loadEnv(mode, process.cwd()).VITE_SITE_URL;
+  const env = loadEnv(mode, process.cwd());
   return {
     base: "./",
-    plugins: [react(), site(siteUrl)],
+    plugins: [react(), site(env.VITE_SITE_URL, env.VITE_ADSENSE_CLIENT)],
     build: {
       rollupOptions: {
         input: Object.fromEntries(ALL.map(u => [u.slice(0, -1).replaceAll("/", "-") || "main", `${u}index.html`])),

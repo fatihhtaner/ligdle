@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
+import { CAPS, decade, NATIONS, POS_LABEL } from "../game/rules";
 import { BUCKETS, type Stats } from "../game/stats";
+import type { Player } from "../game/types";
 
 interface Props {
   won: boolean;
-  answerName: string;
+  answer: Player;
   guessCount: number;
   daily: boolean;
   /** Son kutu açıldıktan sonra yumuşakça belirsin mi (yeni kazanılmış oyun) */
@@ -36,6 +38,26 @@ function Confetti() {
   );
 }
 
+/** Cevabın futbol kartı: oyun bitince gizli oyuncunun bütün kutuları tek bakışta. */
+function PlayerCard({ p }: { p: Player }) {
+  return (
+    <div className="pcard">
+      <div className="pcard-top">
+        <span className="pcard-pos">{POS_LABEL[p.pos]}</span>
+        <span className="pcard-flag" title={p.nat}>{NATIONS[p.nat]?.[0]}</span>
+      </div>
+      <strong className="pcard-name">{p.name}</strong>
+      <span className="pcard-clubs">{p.clubs.slice(0, 3).join(" · ")}{p.clubs.length > 3 && ` +${p.clubs.length - 3}`}</span>
+      <dl>
+        <div><dt>Doğum</dt><dd>{p.born}</dd></div>
+        <div><dt>Dönem</dt><dd>{decade(p.era)}</dd></div>
+        <div><dt>Şamp.</dt><dd>{p.titles}</dd></div>
+        <div><dt>Milli</dt><dd>{CAPS[p.caps]}</dd></div>
+      </dl>
+    </div>
+  );
+}
+
 function StatsView({ stats }: { stats: Stats }) {
   const top = Math.max(1, ...stats.dist);
   return (
@@ -58,7 +80,7 @@ function StatsView({ stats }: { stats: Stats }) {
   );
 }
 
-export function WinBox({ won, answerName, guessCount, daily, late, clock, stats, yesterday, shareText, onAgain }: Props) {
+export function WinBox({ won, answer, guessCount, daily, late, clock, stats, yesterday, shareText, onAgain }: Props) {
   const [copyLabel, setCopyLabel] = useState("Sonucu kopyala");
 
   const copy = async () => {
@@ -81,9 +103,10 @@ export function WinBox({ won, answerName, guessCount, daily, late, clock, stats,
     <div className={`win${late ? " late" : ""}`}>
       {late && won && <Confetti />}
       <div className="win-top">
-        <div>
+        <PlayerCard p={answer} />
+        <div className="win-text">
           <h2>{won ? "Buldun!" : "Cevap buydu"}</h2>
-          <p><strong>{answerName}</strong>{won && `, ${guessCount} tahminde.`}</p>
+          <p><strong>{answer.name}</strong>{won && `, ${guessCount} tahminde.`}</p>
         </div>
         <div className="actions">
           {won && <button onClick={copy}>{copyLabel}</button>}

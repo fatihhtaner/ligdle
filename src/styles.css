@@ -215,7 +215,32 @@ button.tile:hover { filter: brightness(1.04); }
   background: var(--accent); color: var(--accent-fg); border-radius: 24px; padding: 24px 28px;
   display: flex; flex-direction: column; gap: 20px; box-shadow: var(--shadow-lg); position: relative;
 }
-.win-top { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; justify-content: space-between; }
+.win-top { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; }
+.win-text { flex: 1 1 200px; }
+.win .actions { margin-left: auto; }
+/* Cevabın kartı: altın kenarlı koleksiyon kartı */
+.pcard {
+  --gold: #e9c46a;
+  width: 168px; flex: none; padding: 12px 14px 14px; border-radius: 18px 18px 18px 4px; position: relative; overflow: hidden;
+  background: linear-gradient(150deg, #2a2560 0%, #15123a 60%, #0b0a24 100%); color: #f7f2ea;
+  box-shadow: 0 0 0 2px var(--gold), 0 14px 30px -10px rgba(0, 0, 0, .55);
+  display: flex; flex-direction: column; gap: 4px; transform: rotate(-3deg);
+}
+.pcard::before { /* parlama */
+  content: ""; position: absolute; inset: -40% -60%; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(255, 255, 255, .22) 50%, transparent 58%);
+  transform: translateX(-60%); animation: shine 2.6s .9s ease-in-out both;
+}
+@keyframes shine { to { transform: translateX(60%); } }
+.pcard-top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); }
+.pcard-flag { font-size: 20px; line-height: 1; }
+.pcard-name { font: 800 19px/1.1 var(--f-display); margin-top: 6px; }
+.pcard-clubs { font-size: 11px; opacity: .75; min-height: 2.6em; }
+.pcard dl { margin: 6px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; border-top: 1px solid rgba(233, 196, 106, .35); padding-top: 8px; }
+.pcard dt { font-size: 10px; opacity: .65; }
+.pcard dd { margin: 0; font: 700 14px/1.1 var(--f-display); }
+.win.late .pcard { animation: deal .7s .15s cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes deal { from { transform: translateY(24px) rotate(-14deg) scale(.85); opacity: 0; } to { transform: rotate(-3deg); opacity: 1; } }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 32px; }
 .stats dl { margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .stats dt { font-size: 12px; opacity: .8; }
@@ -246,7 +271,7 @@ button.tile:hover { filter: brightness(1.04); }
 .win button { font: 600 15px var(--f-body); border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 0; background: var(--accent-fg); color: var(--accent); }
 .win .clock { font-size: 14px; opacity: .8; font-variant-numeric: tabular-nums; }
 .win textarea { position: absolute; left: -9999px; }
-@media (prefers-reduced-motion: reduce) { .new .tile, .win.late { animation: none; } .confetti { display: none; } }
+@media (prefers-reduced-motion: reduce) { .new .tile, .win.late, .win.late .pcard, .pcard::before { animation: none; } .confetti { display: none; } }
 
 button:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
 a { color: var(--accent); }
@@ -263,6 +288,13 @@ a.ghost { display: inline-block; text-decoration: none; }
 .page .lead { color: var(--muted); font-size: 17px; }
 .page ul { padding-left: 20px; display: grid; gap: 6px; }
 .foot-wrap { margin-top: 40px; }
+.intro { color: var(--muted); font-size: 15px; line-height: 1.6; }
+.intro h2 { font: 800 22px var(--f-display); color: var(--fg); margin: 0 0 8px; }
+.intro h3 { font: 700 16px var(--f-display); color: var(--fg); margin: 0 0 4px; }
+.intro p { margin: 0 0 12px; max-width: 80ch; }
+.intro a { color: var(--fg); }
+.intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 28px; margin: 16px 0 4px; }
+.intro-grid p { margin: 0; }
 .site-foot { border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: 13px; }
 .site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 8px; }
 .site-foot nav a { color: var(--fg); text-decoration: none; font-weight: 500; }
@@ -290,10 +322,14 @@ a.ghost { display: inline-block; text-decoration: none; }
   background: linear-gradient(160deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #000));
   color: var(--accent-fg);
 }
+/* Halka, çözülen kutu oranı kadar dolar (--p, Clues.tsx) */
+@property --p { syntax: "<number>"; inherits: true; initial-value: 0; }
+.card-id { transition: --p .6s ease; }
 .silhouette {
   width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center;
   font: 800 30px var(--f-display); color: var(--accent);
-  background: var(--accent-fg); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-fg) 25%, transparent);
+  background: radial-gradient(closest-side, var(--accent-fg) 84%, transparent 86%),
+    conic-gradient(var(--hit) calc(var(--p, 0) * 360deg), color-mix(in srgb, var(--accent-fg) 25%, transparent) 0);
 }
 .found { font: 700 15px var(--f-display); opacity: .9; }
 .clue-body { padding: 16px 18px; }

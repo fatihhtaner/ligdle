@@ -154,7 +154,7 @@ export default function App() {
         <WinBox
           key={`${game.mode}-${game.answer}`}
           won={game.won}
-          answerName={PLAYERS[game.answer].name}
+          answer={PLAYERS[game.answer]}
           guessCount={game.guesses.length}
           daily={game.mode === "daily"}
           late={lateWin}

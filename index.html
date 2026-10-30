@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ligdle</title>
+<title>Ligdle: Günün futbolcusunu tahmin et</title>
 <meta name="description" content="Türk futbolundan günün oyuncusunu bul. Her tahminde renkli kutular seni cevaba yaklaştırır.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="%VITE_SITE_URL%">
 <meta property="og:url" content="%VITE_SITE_URL%">
-<meta property="og:title" content="Ligdle">
+<meta property="og:title" content="Ligdle: Günün futbolcusunu tahmin et">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Ligdle","url":"%VITE_SITE_URL%","inLanguage":"tr","description":"Türk futbolundan her gün bir oyuncuyu tahmin ettiğin günlük bulmaca oyunu."}</script>
 <meta property="og:description" content="Her gün bir futbolcu. Kim olduğunu bul.">
 <meta property="og:image" content="%VITE_SITE_URL%img/og.jpg">
 <meta property="og:image:width" content="1200">
@@ -25,7 +26,29 @@
 </head>
 <body>
 <div id="root"></div>
-<div class="wrap foot-wrap"><!--site-footer--></div>
+<div class="wrap foot-wrap">
+<!-- Oyun JavaScript ile çizilir; bu bölüm arama motorları ve oyunu ilk kez açanlar için sayfanın düz metnidir. -->
+<section class="intro" aria-labelledby="intro-title">
+  <h2 id="intro-title">Ligdle nedir?</h2>
+  <p>Ligdle, Türk futbolundan her gün bir oyuncuyu bulmaya çalıştığın bir tahmin oyunu. Arama kutusuna bir futbolcu yazarsın; Ligdle onu günün gizli oyuncusuyla karşılaştırır ve mevki, uyruk, kulüpler, doğum yılı, dönem, Süper Lig şampiyonluğu, milli maç sayısı ve aktiflik kutularını renklendirir. Yeşil kutu aynı, sarı kutu yakın, kırmızı kutu farklı demek; oklar da cevabın daha büyük mü küçük mü olduğunu gösterir.</p>
+  <div class="intro-grid">
+    <div>
+      <h3>Her gün yeni bir oyuncu</h3>
+      <p>Günün oyuncusu Türkiye saatiyle gece yarısı değişir ve herkes için aynıdır. Bulduğunda sonucunu emojili kutularla paylaşabilir, serini sürdürebilirsin. Geçmiş günlerin cevapları <a href="./arsiv/">arşivde</a>.</p>
+    </div>
+    <div>
+      <h3>{{players}} futbolcu</h3>
+      <p>Veri setinde Süper Lig'de oynamış ya da A Milli Takım forması giymiş {{players}} oyuncu var; bunların {{foreign}} tanesi {{countries}} farklı ülkeden gelen yabancılar. Günlük cevaplar daha çok tanınan isimlerden seçilir.</p>
+    </div>
+    <div>
+      <h3>Serbest oyun</h3>
+      <p>Günlük oyuncunun yanında Serbest modda rastgele oyuncularla istediğin kadar oynayabilirsin. Zor seviyede daha az bilinen oyuncular da cevap olabilir.</p>
+    </div>
+  </div>
+  <p>Daha az tahminde bulmak için <a href="./rehber/ligdle-ipuclari/">Ligdle ipuçlarına</a> göz at ya da <a href="./rehber/">rehberdeki</a> Süper Lig şampiyonları, gol kralları ve mevkiler üzerine yazıları oku.</p>
+</section>
+<!--site-footer-->
+</div>
 <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
