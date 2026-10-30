@@ -2,7 +2,7 @@
 // Arşiv günlük değiştiği için site her gece yeniden derlenir (.github/workflows/deploy.yml).
 import { dailyAnswer, dayNumber } from "../game/daily";
 import { PLAYERS } from "../game/players";
-import { answerPool, CAPS, decade, NATIONS, POS_GROUP, POS_LABEL } from "../game/rules";
+import { CAPS, dailyPool, decade, NATIONS, POS_GROUP, POS_LABEL } from "../game/rules";
 import { ARTICLES } from "./articles";
 import champions from "./champions.json";
 
@@ -25,7 +25,7 @@ function istanbulToday() {
 
 /** Bugünden önceki günlük oyuncular, yeniden eskiye. Bugünün cevabı gizli kalır. */
 function archive() {
-  const pool = answerPool(PLAYERS, "daily");
+  const pool = dailyPool(PLAYERS);
   const today = istanbulToday();
   const days = Array.from({ length: Math.max(0, dayNumber(today)) }, (_, i) =>
     new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1 - i));

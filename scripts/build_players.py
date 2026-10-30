@@ -4,6 +4,8 @@
 Kaynaklar: İngilizce Wikipedia futbolcu bilgi kutusu (mevki, kulüpler, yıllar, lig maçı, milli takım),
 Wikidata (doğum yılı, uyruk, yedek olarak kulüpler) ve şampiyonlar listesi. Kurallar kural belgesindedir.
 
+İlk N'nin dışında kalsalar da güncel Süper Lig kadrolarındaki ve günlük cevap listesindeki oyuncular alınır.
+
 Çıktılar:
   src/game/players.json      oyunun okuduğu veri
   data/players_review.csv    elle kontrol listesi (her alanın değeri ve kuşkulu alanlar)
@@ -13,6 +15,7 @@ Ham indirmeler data/raw/build/ altında önbelleğe alınır; --fresh ile yenide
 Çalıştırma:  python3 scripts/build_players.py [--top 1000]
 """
 import csv
+import hashlib
 import json
 import re
 import sys
@@ -29,7 +32,10 @@ CANDIDATES = ROOT / "data" / "candidates.csv"
 OVERRIDES = ROOT / "data" / "overrides.csv"
 LEGENDS = ROOT / "data" / "legends.csv"
 DROP = ROOT / "data" / "drop.csv"
+SQUADS = ROOT / "data" / "current_squads.csv"  # scripts/current_squads.py
+DAILY = ROOT / "src" / "game" / "daily.json"  # günlük cevap listesi; adları sabit kalmalı
 OUT = ROOT / "src" / "game" / "players.json"
+IDS = ROOT / "data" / "player_ids.json"  # players.json ile aynı sırada Wikidata kimlikleri
 REVIEW = ROOT / "data" / "players_review.csv"
 
 USER_AGENT = "LigdleDataBot/0.1 (https://github.com/fatihhtaner/ligdle)"
@@ -123,15 +129,15 @@ def resolve_links(titles, lang="en"):
             "action": "query", "prop": "pageprops", "ppprop": "wikibase_item", "redirects": 1,
             "format": "json", "formatversion": 2, "titles": "|".join(batch)})
         q = res["query"]
-        norm = {n["to"]: n["from"] for n in q.get("normalized", [])}
-        redir = {r["to"]: r["from"] for r in q.get("redirects", [])}
-        for page in q["pages"]:
-            item = page.get("pageprops", {}).get("wikibase_item")
-            t = page["title"]
-            for _ in range(3):  # hedef → yönlendirme → normalleştirme zincirini geri sar
-                t = redir.get(t, norm.get(t, t))
-            out[t] = item
-            out[page["title"]] = item
+        # İleri yönde izlenir: aynı sayfaya yönlenen birden çok başlık ("Gençlerbirliği SK", "Gençlerbirliği S.K.") olabilir
+        norm = {n["from"]: n["to"] for n in q.get("normalized", [])}
+        redir = {r["from"]: r["to"] for r in q.get("redirects", [])}
+        items = {page["title"]: page.get("pageprops", {}).get("wikibase_item") for page in q["pages"]}
+        for title in batch:
+            t = norm.get(title, title)
+            t = redir.get(t, t)
+            out[title] = items.get(t)
+            out[t] = items.get(t)
         time.sleep(0.3)
     return out
 
@@ -150,7 +156,7 @@ def fetch_tr_labels(qids):
 
 
 NATION_NAMES = {  # Wikidata adı → oyundaki ad (kural belgesindeki bölge tablosu)
-    "Bosna Hersek": "Bosna-Hersek", "Demokratik Kongo Cumhuriyeti": "Kongo DC", "Kongo Demokratik Cumhuriyeti": "Kongo DC",
+    "Bosna Hersek": "Bosna-Hersek", "Demokratik Kongo Cumhuriyeti": "Kongo DC", "Kongo Demokratik Cumhuriyeti": "Kongo DC", "Kongo Cumhuriyeti": "Kongo",
     "Hollanda Krallığı": "Hollanda", "Amerika Birleşik Devletleri": "ABD", "Beyaz Rusya": "Belarus",
     "Birleşik Krallık": "İngiltere", "Cabo Verde": "Yeşil Burun Adaları", "Çek Cumhuriyeti": "Çekya",
     "Makedonya": "Kuzey Makedonya", "Kuzey Kıbrıs Türk Cumhuriyeti": "Kuzey Kıbrıs", "Güney Kore": "Güney Kore", "Kore Cumhuriyeti": "Güney Kore",
@@ -395,15 +401,22 @@ def champions():
 def main():
     # Eski dönem ve çıkarılan oyuncuların yerini aday listesinin devamı doldursun diye fazlası okunur.
     pool = TOP * 7 // 5
-    rows = list(csv.DictReader(CANDIDATES.open(encoding="utf-8")))[:pool]
+    squads = {r["qid"] for r in csv.DictReader(SQUADS.open(encoding="utf-8"))} if SQUADS.exists() else set()
+    daily = set(json.loads(DAILY.read_text())) if DAILY.exists() else set()
+    previous = list(zip(json.loads(IDS.read_text()), json.loads(OUT.read_text()))) if IDS.exists() else []
+    candidates = list(csv.DictReader(CANDIDATES.open(encoding="utf-8")))
+    forced = squads | {q for q, p in previous if p["name"] in daily}
+    rows = candidates[:pool] + [r for r in candidates[pool:] if r["qid"] in forced]
     qids = [r["qid"] for r in rows]
+    # Önbellek adları oyuncu listesine bağlı: liste değişince bilgi kutuları yeniden indirilir
+    key = hashlib.sha1(",".join(qids).encode()).hexdigest()[:8]
     legends = {r["qid"] for r in csv.DictReader(LEGENDS.open(encoding="utf-8"))}
     drop = {r["qid"] for r in csv.DictReader(DROP.open(encoding="utf-8"))}
 
     print("Wikipedia başlıkları…", file=sys.stderr)
-    wiki_titles = cached(f"enwiki_titles_{pool}", lambda: fetch_enwiki_titles(qids))
+    wiki_titles = cached(f"enwiki_titles_{key}", lambda: fetch_enwiki_titles(qids))
     print("Bilgi kutuları…", file=sys.stderr)
-    intros = cached(f"intros_{pool}", lambda: fetch_intros(wiki_titles.values()))
+    intros = cached(f"intros_{key}", lambda: fetch_intros(wiki_titles.values()))
     boxes = {}
     for q, t in wiki_titles.items():
         body = template_body(intros.get(t, ""))
@@ -413,7 +426,7 @@ def main():
     if (RAW / "trwiki_abroad.json").exists():
         tr_titles |= json.loads((RAW / "trwiki_abroad.json").read_text())
     missing = {q: tr_titles[q] for q in qids if q not in boxes and q in tr_titles}
-    tr_intros = cached(f"tr_intros_{pool}", lambda: fetch_intros(missing.values(), "tr"))
+    tr_intros = cached(f"tr_intros_{key}", lambda: fetch_intros(missing.values(), "tr"))
     tr_boxes = {}
     for q, t in missing.items():
         body = template_body(tr_intros.get(t, ""), r"futbolcu\s+bilgi\s+kutusu")
@@ -431,13 +444,13 @@ def main():
     targets |= {n["target"] for q, ns in nats.items() if q in boxes for n in ns if n["target"]}
     targets |= set(champ.values())
     print("Bağlantılar Wikidata'ya…", file=sys.stderr)
-    link_q = cached(f"links_{pool}", lambda: resolve_links(targets))
+    link_q = cached(f"links_{key}", lambda: resolve_links(targets))
     tr_targets = {s["target"] for q, sp in spells.items() if q in tr_boxes for s in sp}
     tr_targets |= {n["target"] for q, ns in nats.items() if q in tr_boxes for n in ns if n["target"]}
-    tr_link_q = cached(f"tr_links_{pool}", lambda: resolve_links(tr_targets, "tr"))
+    tr_link_q = cached(f"tr_links_{key}", lambda: resolve_links(tr_targets, "tr"))
     team_q = ({link_q.get(n["target"]) for q, ns in nats.items() if q in boxes for n in ns}
               | {tr_link_q.get(n["target"]) for q, ns in nats.items() if q in tr_boxes for n in ns}) - {None}
-    team_label = cached(f"team_labels_{pool}", lambda: fetch_tr_labels(team_q))
+    team_label = cached(f"team_labels_{key}", lambda: fetch_tr_labels(team_q))
 
     turkish = {c["qid"]: c["name"] for c in json.loads((RAW / "clubs.json").read_text())
                if not RESERVE.search(c["name"]) and not re.search(r"kadın|plaj|millî", c["name"], re.I)}
@@ -451,9 +464,9 @@ def main():
 
     players, review, skipped = [], [], Counter()
     for r in rows:
-        if len(players) == TOP:
-            break
         q, flags = r["qid"], []
+        if len(players) >= TOP and q not in forced:
+            continue
         if q in drop:
             skipped["çıkarılan (data/drop.csv)"] += 1
             continue
@@ -557,7 +570,7 @@ def main():
         for field, value in overrides.get(q, {}).items():  # elle düzeltmeler en son uygulanır
             player[field] = (value.split(";") if field == "clubs" else value == "1" if field == "active"
                              else int(value) if field in ("born", "titles", "caps", "era", "fame") else value)
-        if player["era"] and player["era"] <= OLD_ERA and q not in legends:
+        if player["era"] and player["era"] <= OLD_ERA and q not in legends and q not in forced:
             skipped[f"{OLD_ERA}'ler ve öncesi, efsane listesinde değil"] += 1
             continue
         players.append(player)
@@ -572,7 +585,23 @@ def main():
                          if q in wiki_titles else "",
         })
 
+    # Var olan oyuncuların sırası korunur, yeniler sona eklenir: tarayıcıda kayıtlı tahminler oyuncunun sıra
+    # numarasıyla tutuluyor. Bu kurulumda ilk N'den düşen eski oyuncular eski verileriyle kalır; çıkarılanlar silinir.
+    removed = {r["qid"] for f in (DROP, ROOT / "data" / "exclude.csv") for r in csv.DictReader(f.open(encoding="utf-8"))}
+    built = dict(zip((r["qid"] for r in review), players))
+    kept = sum(q not in built for q, _ in previous if q not in removed)
+    order = [(q, built.pop(q, p)) for q, p in previous if q not in removed] + list(built.items())
+    print(f"Önceki sıra korundu; ilk {TOP}'den düşen {kept} eski oyuncu eski verisiyle kaldı", file=sys.stderr)
+    # Aynı adlı iki oyuncu aramada ve günlük listede karışır: sonradan gelenin adına doğum yılı eklenir
+    seen = set()
+    for q, p in order:
+        if p["name"] in seen:
+            p["name"] = f"{p['name']} ({p['born']})"
+            print(f"  adaş: {p['name']}", file=sys.stderr)
+        seen.add(p["name"])
+    players = [p for _, p in order]
     OUT.write_text(json.dumps(players, ensure_ascii=False, separators=(",", ":")))
+    IDS.write_text(json.dumps([q for q, _ in order]))
     with REVIEW.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(review[0]))
         w.writeheader()

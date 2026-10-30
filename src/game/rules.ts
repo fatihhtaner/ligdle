@@ -1,3 +1,4 @@
+import DAILY from "./daily.json";
 import type { Comparison, Level, Player, Position, Verdict } from "./types";
 
 export const POS_LABEL: Record<Position, string> = {
@@ -93,6 +94,19 @@ export const norm = (s: string) =>
 
 /** Cevap olabilecek en düşük bilinirlik puanı (kural belgesi: günlük 4–5, normal 3–5, zor herkes) */
 const MIN_FAME = { daily: 4, normal: 3, hard: 1 } as const;
+
+/**
+ * Günlük cevap olabilecek oyuncuların PLAYERS içindeki sıraları. Liste daily.json'da sabit: veri yeniden kurulup
+ * oyuncu eklense ya da sıra değişse de geçmiş günlerin (arşiv) ve bugünün cevabı değişmez.
+ */
+export function dailyPool(players: Player[]): number[] {
+  const at = new Map(players.map((p, i) => [p.name, i]));
+  return DAILY.map(name => {
+    const i = at.get(name);
+    if (i === undefined) throw new Error(`Günlük listedeki oyuncu veride yok: ${name}`);
+    return i;
+  });
+}
 
 /** Verilen modda cevap olabilecek oyuncuların PLAYERS içindeki sıraları */
 export function answerPool(players: Player[], level: Level | "daily"): number[] {

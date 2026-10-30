@@ -7,7 +7,7 @@ import { WinBox } from "./components/WinBox";
 import { ARTICLES } from "./content/articles";
 import { dailyAnswer, dateKey, dayNumber, untilMidnight } from "./game/daily";
 import { PLAYERS } from "./game/players";
-import { answerPool } from "./game/rules";
+import { answerPool, dailyPool } from "./game/rules";
 import { shareText } from "./game/share";
 import { readStats, recordWin } from "./game/stats";
 import { dailyKey, store } from "./game/storage";
@@ -15,7 +15,7 @@ import type { GameState, Level } from "./game/types";
 
 const BASE = import.meta.env.BASE_URL;
 const LEVEL_KEY = "ligdle:level";
-const DAILY_POOL = answerPool(PLAYERS, "daily");
+const DAILY_POOL = dailyPool(PLAYERS);
 
 function savedLevel(): Level {
   return store.get<Level>(LEVEL_KEY) === "hard" ? "hard" : "normal";

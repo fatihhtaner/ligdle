@@ -4,6 +4,9 @@
 İki giriş yolu var: 1959'dan sonra bir Türk kulübünde oynamak ya da 1959'dan sonra Türkiye A milli
 takımında oynamak. Türkiye'de hiç oynamamış milli oyuncuların kulüp listesi yabancı kulüplerinden oluşur.
 
+Üçüncü yol, Süper Lig'in güncel kadroları (data/current_squads.csv): Wikidata'da kulüp dönemleri çoğu zaman
+eksik olduğu için bu oyuncular kadrodaki kulüple listeye eklenir.
+
 Çıktı: data/candidates.csv (Türkçe Wikipedia okunmasına göre sıralı, elle gözden geçirmek için).
 Ham sorgu sonuçları data/raw/ altında önbelleğe alınır; --fresh ile yeniden çekilir.
 data/exclude.csv içindeki oyuncular listeye hiç girmez.
@@ -25,6 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "data" / "candidates.csv"
 EXCLUDE = ROOT / "data" / "exclude.csv"
+CURRENT = ROOT / "data" / "current_squads.csv"  # scripts/current_squads.py
 
 ENDPOINT = "https://query.wikidata.org/sparql"
 USER_AGENT = "LigdleDataBot/0.1 (https://github.com/fatihhtaner/ligdle)"
@@ -314,6 +318,18 @@ def main():
             by_player[s["p"]].append(s)
     print(f"  {len(by_player)} oyuncu ({len(excluded)} hariç tutuldu)", file=sys.stderr)
 
+    # Güncel kadrodakiler: Wikidata'da o kulüp dönemi yoksa tarihsiz bir dönem eklenir. Asıl kulüp listesini
+    # build_players.py bilgi kutusundan kurar; buradaki dönem yalnızca oyuncuyu listeye sokar.
+    squads = {r["qid"]: r for r in csv.DictReader(CURRENT.open(encoding="utf-8"))} if CURRENT.exists() else {}
+    squads = {p: r for p, r in squads.items() if p not in excluded and r["kulup_qid"]}
+    added = set()
+    for p, r in squads.items():
+        if not any(s["club"] == r["kulup_qid"] for s in by_player.get(p, [])):
+            clubs.setdefault(r["kulup_qid"], r["kulup"])
+            by_player[p].append({"p": p, "club": r["kulup_qid"], "start": None, "end": None, "apps": None, "current": True})
+            added.add(p)
+    print(f"  güncel kadrolar: {len(squads)} oyuncu, {len(added)} tanesinin Wikidata'da o kulübü yoktu", file=sys.stderr)
+
     # Türkiye'de oynamamış ama 1959'dan sonra Türkiye A milli takımına çıkmış oyuncular. Kulüp listeleri
     # yabancı kulüplerinden kurulur; milli takımlar ve gençlik / B takımları aşağıda ayıklanır.
     print("Türkiye'de oynamamış milli oyuncular…", file=sys.stderr)
@@ -329,14 +345,20 @@ def main():
 
     print("Oyuncu bilgileri…", file=sys.stderr)
     people = defaultdict(lambda: defaultdict(set))
-    for r in cached("people", lambda: fetch_people(home)) + cached("people_abroad", lambda: fetch_people(abroad)):
+    people_rows = cached("people", lambda: fetch_people(home)) + cached("people_abroad", lambda: fetch_people(abroad))
+    # Önbellekler güncel kadrolar eklenmeden önce kurulduysa, eksik oyuncular ayrıca çekilir (önbelleğe alınmaz)
+    new = sorted(set(home) - {r["p"] for r in people_rows})
+    if new:
+        print(f"  önbellekte olmayan {len(new)} oyuncu çekiliyor", file=sys.stderr)
+        people_rows += fetch_people(new)
+    for r in people_rows:
         for k, v in r.items():
             if v and k != "p":
                 people[r["p"]][k].add(v)
 
     print("Milli takımlar…", file=sys.stderr)
     national = cached("national", lambda: fetch_national(home)) + cached(
-        "national_abroad", lambda: fetch_national(abroad))
+        "national_abroad", lambda: fetch_national(abroad)) + (fetch_national(new) if new else [])
 
     label_ids = {v for p in people.values() for k in ("sport", "cit", "pos") for v in p[k]}
     label_ids |= {n["team"] for n in national} | {s["club"] for s in abroad_spells}
@@ -389,6 +411,8 @@ def main():
 
     print("Türkçe Wikipedia okunma sayıları…", file=sys.stderr)
     trwiki = cached("trwiki", lambda: fetch_trwiki(home)) | cached("trwiki_abroad", lambda: fetch_trwiki(abroad))
+    if new:
+        trwiki |= fetch_trwiki(new)
     views = fetch_views(trwiki.values())
     start, end = views_window()
     print(f"  {len(trwiki)} oyuncunun Türkçe makalesi var ({start}–{end})", file=sys.stderr)
@@ -400,7 +424,7 @@ def main():
         sp = sorted(by_player.get(p, []), key=lambda s: (s["start"] or 9999, s["end"] or 9999))
         # Söylenti dönemi silinince Türk kulübü kalmayan oyuncu listeye girmez. Mevkisi de tarihli tek
         # kulüp dönemi de olmayanlar çoğunlukla başkan, oyuncu ya da sanatçı (Wikidata'da "futbolcu" da yazıyor).
-        if not sp or (not info["pos"] and not any(s["start"] for s in sp)):
+        if not sp or (p not in squads and not info["pos"] and not any(s["start"] for s in sp)):
             continue
         merged = []
         for s in sp:  # aynı kulübün art arda gelen dönemleri tek dönem sayılır
@@ -431,7 +455,9 @@ def main():
             flags.append("söylenti silindi: " + " / ".join(rumors[p]))
         if any(s["start"] and s["end"] and s["end"] - s["start"] > 20 for s in sp):
             flags.append("uzun dönem")
-        if any(not s["start"] for s in sp):
+        if p in added:
+            flags.append("güncel kadrodan eklendi")
+        elif any(not s["start"] for s in sp):
             flags.append("tarihsiz dönem")
         if p in abroad_set:
             flags.append("Wikidata'da Türk kulübü yok: Türkiye'de gerçekten oynamadığını doğrula")
