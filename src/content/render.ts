@@ -79,7 +79,7 @@ function scorersTable() {
   return `<div class="table-wrap"><table class="data">
 <thead><tr><th>Sezon</th><th>Gol kralı</th><th>Kulüp</th><th>Gol</th></tr></thead>
 <tbody>${[...SEASONS].reverse().map(s =>
-    `<tr><td>${s.season}</td><td>${s.scorers.map(x => `<strong>${esc(x.name)}</strong>`).join("<br>")}</td><td>${s.scorers.map(x => esc(x.club)).join("<br>")}</td><td class="num">${s.goals ?? "–"}</td></tr>`).join("")}</tbody>
+    `<tr><td>${s.season}</td><td>${s.scorers.map(x => `<strong>${esc(x.name)}</strong>`).join("<br>") || "–"}</td><td>${s.scorers.map(x => esc(x.club)).join("<br>") || "–"}</td><td class="num">${s.goals ?? "–"}</td></tr>`).join("")}</tbody>
 </table></div>`;
 }
 

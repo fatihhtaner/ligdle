@@ -546,42 +546,24 @@
   "winner": "Galatasaray",
   "second": "Beşiktaş",
   "third": "Fenerbahçe",
-  "scorers": [
-   {
-    "name": "Hakan Şükür",
-    "nat": "TUR",
-    "club": "Galatasaray"
-   }
-  ],
-  "goals": 38
+  "scorers": [],
+  "goals": null
  },
  {
   "season": "1997–98",
   "winner": "Galatasaray",
   "second": "Fenerbahçe",
   "third": "Trabzonspor",
-  "scorers": [
-   {
-    "name": "Hakan Şükür",
-    "nat": "TUR",
-    "club": "Galatasaray"
-   }
-  ],
-  "goals": 33
+  "scorers": [],
+  "goals": null
  },
  {
   "season": "1998–99",
   "winner": "Galatasaray",
   "second": "Beşiktaş",
   "third": "Fenerbahçe",
-  "scorers": [
-   {
-    "name": "Hakan Şükür",
-    "nat": "TUR",
-    "club": "Galatasaray"
-   }
-  ],
-  "goals": 19
+  "scorers": [],
+  "goals": null
  },
  {
   "season": "1999–2000",

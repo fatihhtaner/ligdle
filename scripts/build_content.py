@@ -3,6 +3,7 @@
 Kaynak, build_players.py'nin de kullandığı İngilizce Wikipedia "List of Turkish football champions" sayfası
 (CC BY-SA 4.0). Çıktı: src/content/champions.json. Kullanım: python3 scripts/build_content.py [--fresh]
 """
+import csv
 import json
 import re
 import sys
@@ -12,6 +13,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 import build_players as b  # noqa: E402
 
 OUT = b.ROOT / "src" / "content" / "champions.json"
+# Oyundan çıkarılan oyuncular tablolarda da adıyla yer almaz
+EXCLUDED = {r["ad"] for r in csv.DictReader((b.ROOT / "data" / "exclude.csv").open(encoding="utf-8"))}
 
 
 def team(cell):
@@ -40,11 +43,14 @@ def main():
         cells = [c[1:] for c in row.split("\n") if c.startswith("|")]
         season = re.search(r"\|(\d{4}(?:–\d{2,4})?)\]\]", cells[0]).group(1)
         goals = re.search(r"(\d+)\s*$", cells[5]) if len(cells) > 5 else None
+        found = scorers(cells[4]) if len(cells) > 4 else []
+        kept = [s for s in found if s["name"] not in EXCLUDED]
         seasons.append({
             "season": season, "winner": team(cells[1]), "second": team(cells[2]),
             "third": team(cells[3]) if len(cells) > 3 else None,
-            "scorers": scorers(cells[4]) if len(cells) > 4 else [],
-            "goals": int(goals.group(1)) if goals else None,
+            "scorers": kept,
+            # gol sayısı yalnızca çıkarılan bir oyuncuya aitse o da gösterilmez
+            "goals": int(goals.group(1)) if goals and (kept or not found) else None,
         })
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(seasons, ensure_ascii=False, indent=1) + "\n")
