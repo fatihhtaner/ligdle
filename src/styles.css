@@ -176,6 +176,4 @@ h1 img { height: clamp(56px, 13vw, 88px); width: auto; }
 .win textarea { position: absolute; left: -9999px; }
 @media (prefers-reduced-motion: reduce) { .new .tile, .win.late { animation: none; } }
 
-footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
-footer p { margin: 0 0 4px; max-width: 80ch; }
 button:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }

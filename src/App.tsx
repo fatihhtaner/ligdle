@@ -144,9 +144,6 @@ export default function App() {
 
       <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
 
-      <footer>
-        <p>Veri setinde {PLAYERS.length} oyuncu var.</p>
-      </footer>
     </div>
   );
 }
