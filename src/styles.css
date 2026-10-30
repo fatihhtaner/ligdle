@@ -230,4 +230,24 @@ button.tile:hover { filter: brightness(1.04); }
 .win textarea { position: absolute; left: -9999px; }
 @media (prefers-reduced-motion: reduce) { .new .tile, .win.late { animation: none; } .confetti { display: none; } }
 
-button:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+a { color: var(--accent); }
+a.ghost { display: inline-block; text-decoration: none; }
+
+/* Static pages (Hakkında, Gizlilik, …) share the game's header logo and the site footer. */
+.site-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.site-head .home { line-height: 0; }
+.site-head img { height: clamp(44px, 10vw, 64px); width: auto; }
+.page { background: var(--surface); border-radius: 24px; padding: clamp(20px, 4vw, 40px); box-shadow: var(--shadow); max-width: 76ch; }
+.page h1 { font: 800 clamp(28px, 6vw, 40px)/1.1 var(--f-display); margin: 0 0 12px; }
+.page h2 { font: 700 20px var(--f-display); margin: 28px 0 8px; }
+.page p, .page li { color: var(--fg); }
+.page .lead { color: var(--muted); font-size: 17px; }
+.page ul { padding-left: 20px; display: grid; gap: 6px; }
+.foot-wrap { margin-top: 40px; }
+.site-foot { border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: 13px; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 8px; }
+.site-foot nav a { color: var(--fg); text-decoration: none; font-weight: 500; }
+.site-foot nav a:hover { text-decoration: underline; }
+.site-foot p { margin: 0; max-width: 80ch; }
+.site-foot p a { color: inherit; }

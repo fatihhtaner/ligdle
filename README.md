@@ -34,6 +34,8 @@ npm run build    # dist/ klasörüne statik site
 - `src/components/`: tahmin tablosu, arama kutusu, kazanma kutusu.
 - `src/styles.css`: tema renkleri ve tüm stiller.
 - `public/img/`: logo, ikonlar, paylaşım görseli.
+- `hakkinda/`, `gizlilik/`, `kosullar/`, `iletisim/`: oyun dışındaki statik sayfalar. Ortak üst ve alt kısım `src/site/` altında; sayfa listesi, site haritası (`sitemap.xml`) ve `robots.txt` `vite.config.ts` içinde kurulur.
+- `.env`: sitenin kalıcı adresi (`VITE_SITE_URL`). Kendi alan adına geçince yalnızca burası değişir; kanonik adresler, paylaşım görseli ve site haritası buradan gelir.
 
 ## Veri
 
