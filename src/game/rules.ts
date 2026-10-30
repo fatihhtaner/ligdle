@@ -98,3 +98,39 @@ const MIN_FAME = { daily: 4, normal: 3, hard: 1 } as const;
 export function answerPool(players: Player[], level: Level | "daily"): number[] {
   return players.flatMap((p, i) => p.fame >= MIN_FAME[level] ? [i] : []);
 }
+
+const more = (guess: number, answer: number, up: string, down: string) => answer > guess ? up : down;
+
+/** Kutuya dokununca çıkan tek cümlelik açıklama: neden bu renk. Cevabı rengin söylediğinden fazla açık etmez. */
+export function explain(key: (typeof TILE_KEYS)[number], g: Player, a: Player): string {
+  const c = compare(g, a);
+  const v = c[key];
+  switch (key) {
+    case "pos":
+      return v === "hit" ? `İkisi de ${POS_LABEL[g.pos].toLocaleLowerCase("tr")}.`
+        : v === "near" ? `Mevkiler farklı ama ikisi de ${POS_GROUP[g.pos].toLocaleLowerCase("tr")} grubunda.`
+        : `Cevap ${POS_GROUP[g.pos].toLocaleLowerCase("tr")} grubunda değil.`;
+    case "nat":
+      return v === "hit" ? `İkisi de ${g.nat}.`
+        : v === "near" ? `Ülkeler farklı ama aynı bölgede: ${NATIONS[g.nat][1]}.`
+        : `Cevap ${NATIONS[g.nat][1]} bölgesinden değil.`;
+    case "clubs":
+      return v === "hit" ? "Kulüp listeleri tamamen aynı."
+        : v === "near" ? `Ortak kulüp: ${c.shared.join(", ")}. Listelerin geri kalanı farklı.`
+        : "Hiç ortak kulüpleri yok.";
+    case "born":
+      return v === "hit" ? "Aynı yıl doğmuşlar."
+        : `${v === "near" ? "En fazla 3 yıl" : "3 yıldan fazla"} fark var; cevap daha ${more(g.born, a.born, "genç", "yaşlı")}.`;
+    case "era":
+      return v === "hit" ? "Kariyerlerinin ortası aynı on yıla denk geliyor."
+        : `${v === "near" ? "Komşu on yıl" : "En az iki on yıl fark"}; cevap daha ${more(g.era, a.era, "yakın bir dönemde", "eski bir dönemde")} oynamış.`;
+    case "titles":
+      return v === "hit" ? "Süper Lig şampiyonluğu sayıları aynı."
+        : `${v === "near" ? "En fazla 1" : "1'den fazla"} fark var; cevabın şampiyonluğu daha ${more(g.titles, a.titles, "çok", "az")}.`;
+    case "caps":
+      return v === "hit" ? `Milli maç sayıları aynı aralıkta (${CAPS[g.caps]}).`
+        : `${v === "near" ? "Komşu aralık" : "En az iki aralık fark"}; cevap daha ${more(g.caps, a.caps, "çok", "az")} milli maça çıkmış.`;
+    case "active":
+      return v === "hit" ? `İkisi de ${g.active ? "hâlâ oynuyor" : "emekli"}.` : `Cevap ${g.active ? "emekli" : "hâlâ oynuyor"}.`;
+  }
+}

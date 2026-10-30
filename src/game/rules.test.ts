@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dailyAnswer, dailyOrder, dayNumber } from "./daily";
 import { PLAYERS } from "./players";
-import { answerPool, arrowOf, compare, decade, NATIONS, norm } from "./rules";
+import { answerPool, arrowOf, compare, decade, explain, NATIONS, norm } from "./rules";
 import type { Player } from "./types";
 
 const p = (over: Partial<Player>): Player => ({
@@ -95,5 +95,15 @@ describe("decade", () => {
   it("on yılın ekini sese göre seçer", () => {
     expect([1950, 1960, 1990, 2000, 2010, 2020].map(decade))
       .toEqual(["1950'ler", "1960'lar", "1990'lar", "2000'ler", "2010'lar", "2020'ler"]);
+  });
+});
+
+describe("explain", () => {
+  it("rengin nedenini söyler, cevabı açık etmez", () => {
+    expect(explain("clubs", p({ clubs: ["Galatasaray", "Bursaspor"] }), p({ clubs: ["Galatasaray", "Fenerbahçe"] })))
+      .toBe("Ortak kulüp: Galatasaray. Listelerin geri kalanı farklı.");
+    expect(explain("born", p({ born: 1990 }), p({ born: 1992 }))).toBe("En fazla 3 yıl fark var; cevap daha genç.");
+    expect(explain("nat", p({ nat: "Belçika" }), p({ nat: "Hollanda" }))).toBe("Ülkeler farklı ama aynı bölgede: Batı Avrupa.");
+    expect(explain("active", p({ active: true }), p({ active: false }))).toBe("Cevap emekli.");
   });
 });

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Board, TILE_STEP } from "./components/Board";
+import { HowTo } from "./components/HowTo";
 import { SearchBox } from "./components/SearchBox";
 import { WinBox } from "./components/WinBox";
 import { dailyAnswer, dateKey, dayNumber, untilMidnight } from "./game/daily";
 import { PLAYERS } from "./game/players";
 import { answerPool } from "./game/rules";
 import { shareText } from "./game/share";
+import { readStats, recordWin } from "./game/stats";
 import { dailyKey, store } from "./game/storage";
 import type { GameState, Level } from "./game/types";
 
@@ -38,6 +40,7 @@ export default function App() {
   const [revealing, setRevealing] = useState(false);
   const [lateWin, setLateWin] = useState(false);
   const [now, setNow] = useState(() => new Date());
+  const [help, setHelp] = useState(false);
   const winTimer = useRef<number>(undefined);
   const shownDay = useRef(dateKey());
 
@@ -71,7 +74,10 @@ export default function App() {
   const guess = (i: number) => {
     if (game.won || game.revealed || game.guesses.includes(i)) return;
     const next = { ...game, guesses: [...game.guesses, i], won: i === game.answer };
-    if (next.mode === "daily") store.set(dailyKey(dateKey()), { guesses: next.guesses });
+    if (next.mode === "daily") {
+      store.set(dailyKey(dateKey()), { guesses: next.guesses });
+      if (next.won) recordWin(dateKey(), next.guesses.length);
+    }
     setGame(next);
     setFresh(i);
     if (next.won) {
@@ -84,9 +90,12 @@ export default function App() {
   const day = dayNumber(now);
   const done = game.won || game.revealed;
   const showWin = done && !revealing;
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const yesterdayName = dayNumber(yesterday) >= 0 ? PLAYERS[DAILY_POOL[dailyAnswer(DAILY_POOL.length, yesterday)]].name : undefined;
 
   return (
     <div className="wrap">
+      <div className="pitch" aria-hidden="true" />
       <header>
         <div>
           <h1>
@@ -107,16 +116,19 @@ export default function App() {
           <button aria-pressed={game.mode === "daily"} onClick={() => game.mode !== "daily" && reset(dailyGame())}>Günlük</button>
           <button aria-pressed={game.mode === "free"} onClick={() => game.mode !== "free" && reset(freeGame(game.answer, game.level))}>Serbest</button>
         </div>
-        {game.mode === "free" && (
-          <div className="right">
+        <div className="right">
+          {game.mode === "free" && <>
             <div className="modes small" data-mode={game.level === "hard" ? "free" : "daily"} role="group" aria-label="Zorluk">
               <button aria-pressed={game.level === "normal"} onClick={() => setLevel("normal")}>Normal</button>
               <button aria-pressed={game.level === "hard"} onClick={() => setLevel("hard")}>Zor</button>
             </div>
             <button className="ghost" onClick={() => { reset({ ...game, revealed: true }); }}>Cevabı göster</button>
             <button className="ghost" onClick={() => reset(freeGame(game.answer, game.level))}>Yeni oyuncu</button>
-          </div>
-        )}
+          </>}
+          {game.guesses.length > 0 && (
+            <button className="ghost" aria-expanded={help} onClick={() => setHelp(h => !h)}>Nasıl oynanır</button>
+          )}
+        </div>
       </div>
 
       {showWin && (
@@ -128,6 +140,8 @@ export default function App() {
           daily={game.mode === "daily"}
           late={lateWin}
           clock={untilMidnight(now)}
+          stats={game.mode === "daily" ? readStats(dateKey(now)) : undefined}
+          yesterday={yesterdayName}
           shareText={() => shareText(game, PLAYERS, day)}
           onAgain={() => reset(freeGame(game.answer, game.level))}
         />
@@ -141,6 +155,10 @@ export default function App() {
         <span><i style={{ background: "var(--miss)" }} />Yanlış</span>
         <span>↑ ↓ cevap daha yüksek / düşük</span>
       </div>
+
+      {(game.guesses.length === 0 || help) && (
+        <HowTo onClose={game.guesses.length > 0 ? () => setHelp(false) : undefined} />
+      )}
 
       <Board players={PLAYERS} answer={game.answer} guesses={game.guesses} fresh={fresh} />
 
