@@ -67,12 +67,14 @@ export default function App() {
     return () => { clearInterval(id); clearTimeout(winTimer.current); };
   }, []);
 
-  // Tahminden sonra yeni satıra kaydır: tablo uzun sayfada aşağıda kalıp tahmin boşa gitmiş gibi görünmesin
-  useEffect(() => {
-    if (fresh < 0) return;
+  // Tahminden sonra yeni satıra, kazanınca da kutular açıldıktan sonra sonuç kutusuna kaydır:
+  // uzun sayfada aşağıda kalıp tahmin boşa gitmiş gibi görünmesin
+  const scrollToEl = (selector: string) => {
     const motion = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    document.querySelector(".board-wrap")?.scrollIntoView({ behavior: motion, block: "start" });
-  }, [fresh]);
+    document.querySelector(selector)?.scrollIntoView({ behavior: motion, block: "start" });
+  };
+  useEffect(() => { if (fresh >= 0) scrollToEl(".board-wrap"); }, [fresh]);
+  useEffect(() => { if (lateWin && !revealing) scrollToEl(".win"); }, [lateWin, revealing]);
 
   const setLevel = (level: Level) => {
     if (level === game.level) return;
