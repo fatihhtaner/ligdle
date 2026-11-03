@@ -14,6 +14,17 @@ const SEASONS = champions as Season[];
 
 const esc = (s: string) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 const nat = (n: string) => `${NATIONS[n]?.[0] ?? ""} ${esc(n)}`.trim();
+const comma = (n: number) => n.toFixed(1).replace(".", ",");
+const percent = (part: number, all: number) => Math.round(part / all * 100);
+const foreignKing = (s: Season) => s.scorers.some(x => x.nat !== "TUR");
+const foreigners = () => PLAYERS.filter(p => p.nat !== "Türkiye");
+
+/** Tekrar sayısına göre çoktan aza sıralı [değer, sayı] listesi. */
+function ranked(items: string[]) {
+  const by = new Map<string, number>();
+  items.forEach(i => by.set(i, (by.get(i) ?? 0) + 1));
+  return [...by].sort((a, b) => b[1] - a[1]);
+}
 
 /** Türkiye saatiyle bugün: derleme sunucusu UTC'de çalışır, oyuncular Türkiye'de. */
 function istanbulToday() {
@@ -95,6 +106,41 @@ function scorerLeaders() {
 </table></div>`;
 }
 
+/** Kulüp başına gol krallığı. Aynı sezonda iki kulüpten gol kralı çıktıysa ikisi de sayılır. */
+function scorerClubs() {
+  const by = new Map<string, string[]>();
+  SEASONS.forEach(s => s.scorers.forEach(x => by.set(x.club, [...(by.get(x.club) ?? []), s.season])));
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Kulüp</th><th>Gol krallığı</th><th>Son kez</th></tr></thead>
+<tbody>${[...by].sort((a, b) => b[1].length - a[1].length).map(([club, s]) =>
+    `<tr><td><strong>${esc(club)}</strong></td><td class="num">${s.length}</td><td>${s.at(-1)}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
+/** Gol kralının attığı gol, sezonun başladığı on yıla göre. Gol sayısı gösterilmeyen sezonlar sayılmaz. */
+function decadeStats() {
+  const by = new Map<number, Season[]>();
+  SEASONS.filter(s => s.goals).forEach(s => {
+    const year = Math.floor(+s.season.slice(0, 4) / 10) * 10;
+    by.set(year, [...(by.get(year) ?? []), s]);
+  });
+  return [...by].map(([year, list]) => {
+    const goals = list.map(s => s.goals!);
+    return {
+      year, seasons: list.length, avg: goals.reduce((a, b) => a + b) / goals.length,
+      max: Math.max(...goals), foreign: list.filter(foreignKing).length,
+    };
+  });
+}
+
+function scorerDecades() {
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Dönem</th><th>Sezon</th><th>Ortalama gol</th><th>En çok gol</th><th>Yabancı gol kralı</th></tr></thead>
+<tbody>${decadeStats().map(d =>
+    `<tr><td><strong>${decade(d.year)}</strong></td><td class="num">${d.seasons}</td><td class="num">${comma(d.avg)}</td><td class="num">${d.max}</td><td class="num">${d.foreign}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
 /** Yabancı oyuncular bölge ve ülkeye göre; her ülkeden en tanınan üç isim (veri seti bilinirliğe göre sıralı). */
 function nations() {
   const by = new Map<string, string[]>();
@@ -114,9 +160,51 @@ function nations() {
 </table></div>`).join("\n");
 }
 
+/** Dönemlere göre yabancı oranı. Dönemi bilinmeyen oyuncular sayılmaz. */
+function eraStats() {
+  const eras = [...new Set(foreigners().map(p => p.era))].filter(Boolean).sort((a, b) => a - b);
+  return eras.map(era => {
+    const all = PLAYERS.filter(p => p.era === era), foreign = all.filter(p => p.nat !== "Türkiye");
+    return { era, all: all.length, foreign: foreign.length, nations: ranked(foreign.map(p => p.nat)).slice(0, 3) };
+  });
+}
+
+function foreignEras() {
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Dönem</th><th>Oyuncu</th><th>Yabancı</th><th>Oran</th><th>En kalabalık ülkeler</th></tr></thead>
+<tbody>${eraStats().map(e =>
+    `<tr><td><strong>${decade(e.era)}</strong></td><td class="num">${e.all}</td><td class="num">${e.foreign}</td><td class="num">%${percent(e.foreign, e.all)}</td><td class="small">${e.nations.map(([n, c]) => `${esc(n)} (${c})`).join(", ")}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
+/** En çok yabancı oyuncusu olan on kulüp. Birden fazla kulüpte oynayan oyuncu her birinde sayılır. */
+function foreignClubs() {
+  const foreign = foreigners();
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Kulüp</th><th>Yabancı</th><th>En kalabalık ülkeler</th></tr></thead>
+<tbody>${ranked(foreign.flatMap(p => p.clubs)).slice(0, 10).map(([club, n]) =>
+    `<tr><td><strong>${esc(club)}</strong></td><td class="num">${n}</td><td class="small">${ranked(foreign.filter(p => p.clubs.includes(club)).map(p => p.nat)).slice(0, 3).map(([c, k]) => `${esc(c)} (${k})`).join(", ")}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
+/** Yabancı ve Türk oyuncuların mevki gruplarına dağılımı. */
+function foreignPositions() {
+  const share = (group: string, list: typeof PLAYERS) => percent(list.filter(p => POS_GROUP[p.pos] === group).length, list.length);
+  const foreign = foreigners(), turkish = PLAYERS.filter(p => p.nat === "Türkiye");
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Grup</th><th>Yabancı</th><th>Türk</th></tr></thead>
+<tbody>${[...new Set(Object.values(POS_GROUP))].map(g =>
+    `<tr><td><strong>${esc(g)}</strong></td><td class="num">%${share(g, foreign)}</td><td class="num">%${share(g, turkish)}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
 /** Yazılarda geçen sayılar: metin elle yazıldığı için tablo değişince güncel kalsın diye buradan gelir. */
 function figures(): Record<string, string | number> {
-  const foreign = PLAYERS.filter(p => p.nat !== "Türkiye");
+  const foreign = foreigners();
+  const kings = SEASONS.filter(s => s.scorers.length);
+  const kingsOf = (club: string) => kings.filter(s => s.scorers.some(x => x.club === club)).length;
+  const decades = decadeStats().filter(d => d.seasons >= 5).sort((a, b) => a.avg - b.avg);
+  const lastEra = eraStats().at(-1)!;
   const titles = (club: string) => SEASONS.filter(s => s.winner === club).length;
   return {
     seasons: SEASONS.length, lastSeason: SEASONS.at(-1)!.season, lastChampion: SEASONS.at(-1)!.winner,
@@ -124,13 +212,25 @@ function figures(): Record<string, string | number> {
     champions: new Set(SEASONS.map(s => s.winner)).size,
     players: PLAYERS.length, foreign: foreign.length, countries: new Set(foreign.map(p => p.nat)).size,
     positions: Object.keys(POS_GROUP).length,
+    turkish: PLAYERS.length - foreign.length,
+    kingSeasons: kings.length, foreignKingSeasons: kings.filter(foreignKing).length,
+    recentForeign: kings.slice(-10).filter(foreignKing).length,
+    kingChampion: kings.filter(s => s.scorers.some(x => x.club === s.winner)).length,
+    gsKings: kingsOf("Galatasaray"), fbKings: kingsOf("Fenerbahçe"), bjkKings: kingsOf("Beşiktaş"), tsKings: kingsOf("Trabzonspor"),
+    kingClubs: new Set(kings.flatMap(s => s.scorers.map(x => x.club))).size,
+    lowDecade: decade(decades[0].year), lowAvg: comma(decades[0].avg),
+    highDecade: decade(decades.at(-1)!.year), highAvg: comma(decades.at(-1)!.avg),
+    lastEra: decade(lastEra.era), lastEraShare: percent(lastEra.foreign, lastEra.all),
+    multiClub: percent(foreign.filter(p => p.clubs.length > 1).length, foreign.length),
+    foreignChampions: foreign.filter(p => p.titles > 0).length,
   };
 }
 
 export function render(html: string, root: string) {
   const parts: Record<string, () => string> = {
     archive, articles: () => articles(root), champions: championsTable, "club-titles": clubTitles,
-    scorers: scorersTable, "scorer-leaders": scorerLeaders, nations,
+    scorers: scorersTable, "scorer-leaders": scorerLeaders, "scorer-clubs": scorerClubs, "scorer-decades": scorerDecades,
+    nations, "foreign-eras": foreignEras, "foreign-clubs": foreignClubs, "foreign-positions": foreignPositions,
   };
   const f = figures();
   return html
