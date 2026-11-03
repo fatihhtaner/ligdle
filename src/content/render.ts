@@ -160,9 +160,9 @@ function nations() {
 </table></div>`).join("\n");
 }
 
-/** Dönemlere göre yabancı oranı. Dönemi bilinmeyen oyuncular sayılmaz. */
+/** Dönemlere göre yabancı oranı. */
 function eraStats() {
-  const eras = [...new Set(foreigners().map(p => p.era))].filter(Boolean).sort((a, b) => a - b);
+  const eras = [...new Set(foreigners().map(p => p.era))].sort((a, b) => a - b);
   return eras.map(era => {
     const all = PLAYERS.filter(p => p.era === era), foreign = all.filter(p => p.nat !== "Türkiye");
     return { era, all: all.length, foreign: foreign.length, nations: ranked(foreign.map(p => p.nat)).slice(0, 3) };

@@ -726,7 +726,7 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 725,Q3547772,Ufuk Talay,3,Merkez OS,Midfielder,Avustralya,Galatasaray; Antalyaspor; Kardemir Karabükspor; Bursaspor; Gaziantepspor; Mersin İdman Yurdu,1976,2000,5,1996–97 1997–98 1998–99 1999–00 2001–02,10,hayır,şampiyonluk: kiralık ya da yarım sezon var,,https://en.wikipedia.org/wiki/Ufuk_Talay
 726,Q247485,Hugo Rodallega,3,Santrfor,"Forward, winger",Kolombiya,Akhisar Belediyespor; Trabzonspor; Denizlispor,1985,2010,0,,43,evet,,,https://en.wikipedia.org/wiki/Hugo_Rodallega
 727,Q207407,Elano Blumer,3,Ofansif OS,Attacking midfielder,Brezilya,Galatasaray,1981,2010,0,,50,hayır,,,https://en.wikipedia.org/wiki/Elano
-728,Q721884,Tınaz Tırpan,3,Stoper,,Türkiye,Petrol Ofisi; Fenerbahçe,1939,0,0,,,hayır,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/T%C4%B1naz_T%C4%B1rpan
+728,Q721884,Tınaz Tırpan,3,Stoper,,Türkiye,Petrol Ofisi; Fenerbahçe,1939,1960,0,,,hayır,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/T%C4%B1naz_T%C4%B1rpan
 729,Q6298271,João Mário,3,Merkez OS,Midfielder,Portekiz,Beşiktaş,1993,2020,0,,56,evet,,,https://en.wikipedia.org/wiki/Jo%C3%A3o_M%C3%A1rio_%28footballer%2C_born_January_1993%29
 730,Q936142,Alanzinho,3,Ofansif OS,Attacking midfielder,Brezilya,Trabzonspor; Balıkesirspor; Gaziantep,1983,2010,0,,,hayır,,,https://en.wikipedia.org/wiki/Alanzinho
 731,Q6059279,Sadık Çiftpınar,3,Stoper,Defender,Türkiye,Trabzon Kanuni; Yeni Malatyaspor; Fenerbahçe; Kasımpaşa; Sakaryaspor,1993,2010,0,,,evet,,,https://en.wikipedia.org/wiki/Sad%C4%B1k_%C3%87iftp%C4%B1nar
@@ -1112,11 +1112,11 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 1111,Q111805571,Andrei Borza,2,Sol bek,Left-back,Romanya,Çorum Belediyespor,2005,2020,0,,3,evet,,,https://en.wikipedia.org/wiki/Andrei_Borza
 1112,Q133541007,Rajmund Tóth,2,Merkez OS,Midfielder,Macaristan,Konyaspor,2004,2020,0,,4,evet,,,https://en.wikipedia.org/wiki/Rajmund_T%C3%B3th
 1113,Q123785598,Mahamadou Susoho,2,Defansif OS,Defensive midfielder,İngiltere,Kocaelispor,2005,2020,0,,,evet,uyruk belirsiz: İngiltere / İspanya,,https://en.wikipedia.org/wiki/Mahamadou_Susoho
-1114,Q109311565,Kacper Tobiasz,2,Kaleci,Goalkeeper,Polonya,Gaziantep,2002,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Kacper_Tobiasz
+1114,Q109311565,Kacper Tobiasz,2,Kaleci,Goalkeeper,Polonya,Gaziantep,2002,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Kacper_Tobiasz
 1115,Q28549795,Abdülhamid Sabiri,2,Ofansif OS,Attacking midfielder,Fas,Eyüpspor,1996,2020,0,,11,evet,,,https://en.wikipedia.org/wiki/Abdelhamid_Sabiri
 1116,Q88969536,Husniddin Alikulov,2,Stoper,Centre-back,Özbekistan,Rizespor,1999,2020,0,,30,evet,,,https://en.wikipedia.org/wiki/Husniddin_Aliqulov
 1117,Q17180964,Noah Sonko Sundberg,2,Stoper,Defender,Gambiya,Sivasspor; Göztepe,1996,2020,0,,18,evet,,,https://en.wikipedia.org/wiki/Noah_Sonko_Sundberg
-1118,Q56289669,Elliot Watt,2,Merkez OS,Midfielder,İskoçya,Samsunspor,2000,0,0,,,evet,"kulüpler Wikidata'dan, milli maç sayısı yok, dönem hesaplanamadı",nat,https://en.wikipedia.org/wiki/Elliot_Watt
+1118,Q56289669,Elliot Watt,2,Merkez OS,Midfielder,İskoçya,Samsunspor,2000,2020,0,,,evet,"kulüpler Wikidata'dan, milli maç sayısı yok, dönem hesaplanamadı",nat,https://en.wikipedia.org/wiki/Elliot_Watt
 1119,Q102068688,Mirza Cihan,2,Kanat,Winger,Türkiye,Gaziantep; Adanaspor; Sakaryaspor,2000,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Mirza_Cihan
 1120,Q29002812,Konrad Michalak,2,Kanat,Winger,Polonya,Ankaragücü; Rizespor; Konyaspor,1997,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Konrad_Michalak
 1121,Q81187581,Strahinja Eraković,2,Stoper,Centre-back,Sırbistan,Samsunspor,2001,2020,0,,23,evet,,,https://en.wikipedia.org/wiki/Strahinja_Erakovi%C4%87
@@ -1134,34 +1134,34 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 1133,Q28856040,Cevad el-Yamik,2,Stoper,Centre-back,Fas,Eyüpspor,1992,2020,0,,35,evet,,,https://en.wikipedia.org/wiki/Jawad_El_Yamiq
 1134,Q113004777,Rhaldney,2,Merkez OS,Midfielder,Brezilya,Göztepe,1998,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Rhaldney
 1135,Q45940576,Lenny Pintor,2,Kanat,Winger,Fransa,Eyüpspor,2000,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Lenny_Pintor
-1136,Q134437355,Oskar Øhlenschlæger,2,Merkez OS,CM,Danimarka,Samsunspor,2004,0,0,,,evet,"kulüpler Wikidata'dan, mevki yok, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Oskar_%C3%98hlenschl%C3%A6ger
+1136,Q134437355,Oskar Øhlenschlæger,2,Merkez OS,CM,Danimarka,Samsunspor,2004,2020,0,,,evet,"kulüpler Wikidata'dan, mevki yok, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Oskar_%C3%98hlenschl%C3%A6ger
 1137,Q110930316,Bilal Bayazıt,2,Kaleci,Goalkeeper,Hollanda,Kayserispor,1999,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Bilal_Bayaz%C4%B1t
 1138,Q25935566,Luis Pérez,2,Sağ bek,Right-back,İspanya,Gaziantep,1995,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Luis_P%C3%A9rez_%28footballer%2C_born_1995%29
-1139,Q17476763,Jean-Luc Dompé,2,Kanat,Left winger,Fransa,Konyaspor,1995,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Jean-Luc_Domp%C3%A9
+1139,Q17476763,Jean-Luc Dompé,2,Kanat,Left winger,Fransa,Konyaspor,1995,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Jean-Luc_Domp%C3%A9
 1140,Q116820057,Adedire Mebude,2,Kanat,Winger,İskoçya,Rizespor,2004,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Adedire_Mebude
-1141,Q127789145,Thiemoko Diarra,2,Kanat,Left Winger,Mali,Kasımpaşa,2003,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Thiemoko_Diarra
+1141,Q127789145,Thiemoko Diarra,2,Kanat,Left Winger,Mali,Kasımpaşa,2003,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Thiemoko_Diarra
 1142,Q118531309,Gonçalo Sousa,2,Kanat,Winger,Portekiz,Kocaelispor,2006,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Gon%C3%A7alo_Sousa
-1143,Q124259304,Moussa Diakité,2,Merkez OS,Midfielder,Mali,Rizespor,2003,0,0,,1,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Moussa_Diakit%C3%A9_%28footballer%2C_born_2003%29
+1143,Q124259304,Moussa Diakité,2,Merkez OS,Midfielder,Mali,Rizespor,2003,2020,0,,1,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Moussa_Diakit%C3%A9_%28footballer%2C_born_2003%29
 1144,Q131358485,Enver Kulašin,2,Kanat,Winger,Bosna-Hersek,Gaziantep; Sarıyer,2003,2020,0,,1,evet,,,https://en.wikipedia.org/wiki/Enver_Kula%C5%A1in
 1145,Q136039312,Prince Martor Jr.,2,Santrfor,"Forward, winger",Liberya,Gençlerbirliği,2007,2020,0,,2,evet,,,https://en.wikipedia.org/wiki/Prince_Martor_Jr.
 1146,Q137799254,Victor Ntino-emo Gidado,2,Ofansif OS,Attacking midfielder,Nijerya,Gaziantep,2004,2020,0,,,evet,,nat,https://en.wikipedia.org/wiki/Victor_Gidado
 1147,Q137062501,Haydar Karataş,2,Kanat,Winger,Türkiye,Fenerbahçe; Sakaryaspor,2007,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Haydar_Karata%C5%9F
 1148,Q111990082,Efe Arda Koyuncu,2,Stoper,Centre-back,Türkiye,Başakşehir; Şanlıurfaspor,2005,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Efe_Arda_Koyuncu
-1149,Q107988704,Tanguy Zoukrou,2,Stoper,Centre-back,Fransa,Kocaelispor,2003,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Tanguy_Zoukrou
+1149,Q107988704,Tanguy Zoukrou,2,Stoper,Centre-back,Fransa,Kocaelispor,2003,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Tanguy_Zoukrou
 1150,Q109440329,Matej Maglica,2,Stoper,Centre-back,Hırvatistan,Kocaelispor,1998,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Matej_Maglica
 1151,Q14623225,Onur Bulut,2,Sağ bek,Right back,Türkiye,Alanyaspor; Rizespor; Kayserispor; Beşiktaş; Başakşehir,1994,2020,0,,4,evet,,,https://en.wikipedia.org/wiki/Onur_Bulut
-1152,Q69995115,Tiago Gouveia,2,Kanat,Right winger,Portekiz,Gençlerbirliği,2001,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Tiago_Gouveia
+1152,Q69995115,Tiago Gouveia,2,Kanat,Right winger,Portekiz,Gençlerbirliği,2001,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Tiago_Gouveia
 1153,Q68603852,Tino Anjorin,2,Merkez OS,,İngiltere,Göztepe,2001,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Tino_Anjorin
 1154,Q23799554,Ylber Ramadani,2,Defansif OS,Defensive midfielder,Arnavutluk,Çorum Belediyespor,1996,2020,0,,53,evet,,,https://en.wikipedia.org/wiki/Ylber_Ramadani
 1155,Q112115276,Abakar Sylla,2,Stoper,Centre-back,Fildişi Sahili,Gaziantep,2002,2020,0,,5,evet,,,https://en.wikipedia.org/wiki/Abakar_Sylla
-1156,Q20876984,David Bates,2,Stoper,Centre-back,İskoçya,Amed,1996,0,0,,4,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/David_Bates_%28footballer%29
-1157,Q73247293,Michał Karbownik,2,Sağ bek,Full-back,Polonya,Başakşehir,2001,0,0,,4,evet,"kulüpler Wikidata'dan, bek tarafı belirsiz, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Micha%C5%82_Karbownik
+1156,Q20876984,David Bates,2,Stoper,Centre-back,İskoçya,Amed,1996,2020,0,,4,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/David_Bates_%28footballer%29
+1157,Q73247293,Michał Karbownik,2,Sağ bek,Full-back,Polonya,Başakşehir,2001,2020,0,,4,evet,"kulüpler Wikidata'dan, bek tarafı belirsiz, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Micha%C5%82_Karbownik
 1158,Q88069926,Mohammed Diomande,2,Merkez OS,Midfielder,Fildişi Sahili,Çorum Belediyespor,2001,2020,0,,8,evet,,,https://en.wikipedia.org/wiki/Mohamed_Diomande
 1159,Q21015535,Pedro Pereira,2,Sağ bek,Right-back,Portekiz,Alanyaspor; Gençlerbirliği,1998,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Pedro_Pereira_%28footballer%2C_born_1998%29
-1160,Q24005769,Rayan Raveloson,2,Merkez OS,Midfielder,Madagaskar,Amed,1997,0,0,,45,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Rayan_Raveloson
-1161,Q36206629,Paolo Fernandes,2,Kanat,"Winger, attacking midfielder",İspanya,Alanyaspor,1998,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Paolo_Fernandes
+1160,Q24005769,Rayan Raveloson,2,Merkez OS,Midfielder,Madagaskar,Amed,1997,2020,0,,45,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Rayan_Raveloson
+1161,Q36206629,Paolo Fernandes,2,Kanat,"Winger, attacking midfielder",İspanya,Alanyaspor,1998,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Paolo_Fernandes
 1162,Q64364360,Yira Sor,2,Kanat,Winger,Nijerya,Amed,2000,2020,0,,1,evet,,,https://en.wikipedia.org/wiki/Yira_Sor
-1163,Q107449898,Lawrence Agyekum,2,Merkez OS,Midfielder,Gana,Erzurumspor,2003,0,0,,3,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Lawrence_Agyekum
+1163,Q107449898,Lawrence Agyekum,2,Merkez OS,Midfielder,Gana,Erzurumspor,2003,2020,0,,3,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Lawrence_Agyekum
 1164,Q113626508,Ermal Krasniqi,2,Kanat,Winger,Kosova,Amed,1998,2020,0,,19,evet,,,https://en.wikipedia.org/wiki/Ermal_Krasniqi
 1165,Q108647399,Alexandre Penetra,2,Stoper,"Centre-back, right-back",Portekiz,Çorum Belediyespor,2001,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Alexandre_Penetra
 1166,Q110289769,Simone Giordano,2,Sol bek,"Left-back, left midfielder",İtalya,Eyüpspor,2001,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Simone_Giordano
@@ -1175,22 +1175,22 @@ sira,qid,ad,bilinirlik,mevki,mevki_kaynak,uyruk,kulupler,dogum,donem,sampiyonluk
 1174,Q122110071,Alex Matos,2,Defansif OS,Defensive midfielder,İngiltere,Göztepe,2004,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Alex_Matos
 1175,Q134993871,Rafael Luís,2,Defansif OS,Defensive midfielder,Portekiz,Gençlerbirliği,2005,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Rafael_Lu%C3%ADs
 1176,Q28600232,Zak Jules,2,Stoper,Defender,İngiltere,Eyüpspor,1997,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Zak_Jules
-1177,Q69997215,Gennaro Borrelli,2,Santrfor,Forward,İtalya,Rizespor,2000,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Gennaro_Borrelli
+1177,Q69997215,Gennaro Borrelli,2,Santrfor,Forward,İtalya,Rizespor,2000,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Gennaro_Borrelli
 1178,Q73916000,Pedro Mendes,2,Santrfor,Striker,Portekiz,Gençlerbirliği,1999,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Pedro_Mendes_%28footballer%2C_born_1999%29
 1179,Q113361592,Sinclair Armstrong,2,Santrfor,Forward,İrlanda,Göztepe,2003,2020,0,,1,evet,,,https://en.wikipedia.org/wiki/Sinclair_Armstrong
 1180,Q114363546,Matei Ilie,2,Stoper,Centre-back,Romanya,Kasımpaşa,2002,2020,0,,4,evet,,,https://en.wikipedia.org/wiki/Matei_Ilie
 1181,Q130217611,Victor Orakpo,2,Santrfor,Forward,Nijerya,Gençlerbirliği,2006,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Victor_Orakpo
 1182,Q117458019,André Henrique,2,Santrfor,"Striker, winger",Brezilya,Göztepe,2001,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Andr%C3%A9_Henrique
 1183,Q137163511,Richard Akonnor,2,Sol bek,Left-back,Birleşik Arap Emirlikleri,Göztepe,2004,2020,0,,8,evet,,,https://en.wikipedia.org/wiki/Richard_Akonnor
-1184,Q33107087,Markus Karlsbakk,2,Merkez OS,Midfielder,Norveç,Çorum Belediyespor,2000,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Markus_Karlsbakk
+1184,Q33107087,Markus Karlsbakk,2,Merkez OS,Midfielder,Norveç,Çorum Belediyespor,2000,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Markus_Karlsbakk
 1185,Q113389164,Kévin Mouanga,2,Stoper,Centre-back,Fransa,Kasımpaşa,2000,2020,0,,,evet,,,https://en.wikipedia.org/wiki/K%C3%A9vin_Mouanga
 1186,Q123422510,Iustin Doicaru,2,Kanat,Right winger,Romanya,Rizespor,2007,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Iustin_Doicaru
-1187,Q135772389,Siaka Bakayoko,2,Stoper,Centre-back,Fransa,Rizespor,2005,0,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Siaka_Bakayoko
-1188,Q135976570,Elson Mendes,2,Defansif OS,Defensive midfielder,Yeşil Burun Adaları,Kasımpaşa,2005,0,0,,2,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Elson_Mendes
+1187,Q135772389,Siaka Bakayoko,2,Stoper,Centre-back,Fransa,Rizespor,2005,2020,0,,,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Siaka_Bakayoko
+1188,Q135976570,Elson Mendes,2,Defansif OS,Defensive midfielder,Yeşil Burun Adaları,Kasımpaşa,2005,2020,0,,2,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Elson_Mendes
 1189,Q137799253,Karamba Gassama,2,Merkez OS,Midfielder,Gambiya,Gaziantep,2005,2020,0,,1,evet,,,https://en.wikipedia.org/wiki/Karamba_Gassama
 1190,Q138040916,Jakob Jessen,2,Sol bek,Left-back,Danimarka,Kasımpaşa,2004,2020,0,,,evet,,nat,https://en.wikipedia.org/wiki/Jakob_Jessen
 1191,Q140069463,Ada Yüzgeç,2,Santrfor,Striker,Türkiye,Galatasaray,2009,2020,1,2025–26,,evet,,,https://en.wikipedia.org/wiki/Ada_Y%C3%BCzge%C3%A7
 1192,Q130318156,Ahmet Yıldırım,2,Kaleci,Goalkeeper,Türkiye,Trabzonspor,2006,2020,0,,,evet,,,https://en.wikipedia.org/wiki/Ahmet_Do%C4%9Fan_Y%C4%B1ld%C4%B1r%C4%B1m
 1193,Q136211119,David Costa,2,Ofansif OS,Attacking midfielder,Yeşil Burun Adaları,Eyüpspor,2004,2020,0,,1,evet,,,https://en.wikipedia.org/wiki/David_Costa_%28footballer%2C_born_2004%29
 1194,Q138003295,Ousmane Diabate,2,Defansif OS,Defensive midfielder,Gine,Gençlerbirliği,2007,2020,0,,3,evet,,,https://en.wikipedia.org/wiki/Ousmane_Diabat%C3%A9_%28footballer%2C_born_2007%29
-1195,Q140288725,Amadou Cissé,2,Stoper,Centre-back,Gine,Amed,2006,0,0,,1,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Amadou_Ciss%C3%A9_%28footballer%2C_born_2006%29
+1195,Q140288725,Amadou Cissé,2,Stoper,Centre-back,Gine,Amed,2006,2020,0,,1,evet,"kulüpler Wikidata'dan, dönem hesaplanamadı",,https://en.wikipedia.org/wiki/Amadou_Ciss%C3%A9_%28footballer%2C_born_2006%29

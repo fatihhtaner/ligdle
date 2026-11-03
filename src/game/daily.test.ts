@@ -24,3 +24,9 @@ describe("günlük cevaplar", () => {
     `);
   });
 });
+
+describe("oyuncu verisi", () => {
+  it("her oyuncunun dönemi var", () => {
+    expect(PLAYERS.filter(p => !p.era).map(p => p.name)).toEqual([]);
+  });
+});

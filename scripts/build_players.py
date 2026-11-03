@@ -573,6 +573,8 @@ def main():
         if player["era"] and player["era"] <= OLD_ERA and q not in legends and q not in forced:
             skipped[f"{OLD_ERA}'ler ve öncesi, efsane listesinde değil"] += 1
             continue
+        if not player["era"]:  # Tarih yoksa: aktif oyuncu bugünün dönemi, değilse doğum yılı + kariyer ortası yaşı
+            player["era"] = (CURRENT_YEAR if player["active"] else (born or CURRENT_YEAR) + 27) // 10 * 10
         players.append(player)
         review.append({
             "sira": rank, "qid": q, "ad": r["ad"], "bilinirlik": fame, "mevki": player["pos"],
