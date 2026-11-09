@@ -5,6 +5,7 @@ import { PLAYERS } from "../game/players";
 import { CAPS, dailyPool, decade, NATIONS, POS_GROUP, POS_LABEL } from "../game/rules";
 import { ARTICLES } from "./articles";
 import champions from "./champions.json";
+import pre1959 from "./pre1959.json";
 
 interface Season {
   season: string; winner: string; second: string; third: string | null;
@@ -141,6 +142,35 @@ function scorerDecades() {
 </table></div>`;
 }
 
+// 1959 öncesi ulusal şampiyonalar: [sezon, şampiyon, ikinci]. Harbiye, Harp Okulu'nun eski adı.
+const PRE = pre1959 as Record<"championship" | "national" | "federation", [string, string, string][]>;
+const PRE_NAMES: [keyof typeof PRE, string][] = [["championship", "Türkiye Şampiyonası"], ["national", "Millî Küme"], ["federation", "Federasyon Kupası"]];
+const preClub = (club: string) => club === "Harbiye" ? "Harp Okulu" : club;
+
+function preTable(key: keyof typeof PRE) {
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Sezon</th><th>Şampiyon</th><th>İkinci</th></tr></thead>
+<tbody>${PRE[key].map(([season, winner, second]) =>
+    `<tr><td>${season}</td><td><strong>${esc(winner)}</strong></td><td>${esc(second)}</td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
+/** Kulüplerin 1959 öncesi şampiyonlukları ve sayılsaydı ulaşacakları toplam. */
+function preTotals() {
+  const clubs = [...new Set(PRE_NAMES.flatMap(([key]) => PRE[key].map(([, w]) => preClub(w))))];
+  const count = (key: keyof typeof PRE, club: string) => PRE[key].filter(([, w]) => preClub(w) === club).length;
+  const after = (club: string) => SEASONS.filter(s => s.winner === club).length;
+  const rows = clubs.map(club => {
+    const before = PRE_NAMES.map(([key]) => count(key, club));
+    return { club, before, sum: before.reduce((a, b) => a + b), after: after(club) };
+  }).sort((a, b) => b.sum + b.after - a.sum - a.after);
+  return `<div class="table-wrap"><table class="data">
+<thead><tr><th>Kulüp</th>${PRE_NAMES.map(([, name]) => `<th>${name}</th>`).join("")}<th>1959 öncesi</th><th>1959 sonrası</th><th>Toplam</th></tr></thead>
+<tbody>${rows.map(r =>
+    `<tr><td><strong>${esc(r.club)}</strong></td>${r.before.map(n => `<td class="num">${n || "–"}</td>`).join("")}<td class="num">${r.sum}</td><td class="num">${r.after || "–"}</td><td class="num"><strong>${r.sum + r.after}</strong></td></tr>`).join("")}</tbody>
+</table></div>`;
+}
+
 /** Yabancı oyuncular bölge ve ülkeye göre; her ülkeden en tanınan üç isim (veri seti bilinirliğe göre sıralı). */
 function nations() {
   const by = new Map<string, string[]>();
@@ -230,6 +260,8 @@ export function render(html: string, root: string) {
   const parts: Record<string, () => string> = {
     archive, articles: () => articles(root), champions: championsTable, "club-titles": clubTitles,
     scorers: scorersTable, "scorer-leaders": scorerLeaders, "scorer-clubs": scorerClubs, "scorer-decades": scorerDecades,
+    "pre-championship": () => preTable("championship"), "pre-national": () => preTable("national"),
+    "pre-federation": () => preTable("federation"), "pre-totals": preTotals,
     nations, "foreign-eras": foreignEras, "foreign-clubs": foreignClubs, "foreign-positions": foreignPositions,
   };
   const f = figures();

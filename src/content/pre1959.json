@@ -1,0 +1,37 @@
+{
+  "championship": [
+    ["1924", "Harbiye", "Bahriye"],
+    ["1927", "Muhafızgücü", "Altınordu"],
+    ["1932", "İstanbulspor", "Altınordu"],
+    ["1933", "Fenerbahçe", "İzmirspor"],
+    ["1934", "Beşiktaş", "Altay"],
+    ["1935", "Fenerbahçe", "Altınordu"],
+    ["1940", "Eskişehir Demirspor", "Fenerbahçe"],
+    ["1941", "Gençlerbirliği", "Beşiktaş"],
+    ["1942", "Harp Okulu", "Göztepe"],
+    ["1944", "Fenerbahçe", "Harp Okulu"],
+    ["1945", "Harp Okulu", "İzmit Harp Filosu"],
+    ["1946", "Gençlerbirliği", "Beşiktaş"],
+    ["1947", "Ankara Demirspor", "Fenerbahçe"],
+    ["1949", "Ankaragücü", "Galatasaray"],
+    ["1950", "Göztepe", "Gençlerbirliği"],
+    ["1951", "Beşiktaş", "Altay"]
+  ],
+  "national": [
+    ["1937", "Fenerbahçe", "Galatasaray"],
+    ["1938", "Güneş", "Beşiktaş"],
+    ["1939", "Galatasaray", "Ankara Demirspor"],
+    ["1940", "Fenerbahçe", "Galatasaray"],
+    ["1941", "Beşiktaş", "Galatasaray"],
+    ["1943", "Fenerbahçe", "Galatasaray"],
+    ["1944", "Beşiktaş", "Fenerbahçe"],
+    ["1945", "Fenerbahçe", "Beşiktaş"],
+    ["1946", "Fenerbahçe", "Beşiktaş"],
+    ["1947", "Beşiktaş", "Fenerbahçe"],
+    ["1950", "Fenerbahçe", "Galatasaray"]
+  ],
+  "federation": [
+    ["1956–57", "Beşiktaş", "Galatasaray"],
+    ["1957–58", "Beşiktaş", "Galatasaray"]
+  ]
+}
