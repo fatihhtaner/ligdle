@@ -20,9 +20,9 @@ const ALL = ["", ...PAGES.map(([path]) => `${path}/`), ...ARTICLES.map(([slug]) 
 
 /**
  * Statik sayfalardaki <!--site-header--> ve <!--site-footer--> yerlerine ortak üst ve alt kısmı koyar,
- * her sayfaya AdSense doğrulama etiketi ekler, <!--render:…--> yerlerine veriden üretilen tabloları koyar (src/content/render.ts), derlemede sitemap.xml, ads.txt ve robots.txt üretir. Bağlantılar göreli: site alt klasörde de çalışır.
+ * her sayfaya AdSense doğrulama etiketi ve (yalnızca derlemede) Cloudflare Web Analytics kodu ekler, <!--render:…--> yerlerine veriden üretilen tabloları koyar (src/content/render.ts), derlemede sitemap.xml, ads.txt ve robots.txt üretir. Bağlantılar göreli: site alt klasörde de çalışır.
  */
-function site(siteUrl: string, adsense: string): Plugin {
+function site(siteUrl: string, adsense: string, beacon?: string): Plugin {
   const page = (name: string) => readFileSync(new URL(`./src/site/${name}.html`, import.meta.url), "utf8");
   return {
     name: "ligdle-site",
@@ -30,8 +30,12 @@ function site(siteUrl: string, adsense: string): Plugin {
       const depth = relative(dirname(ctx.filename), new URL(".", import.meta.url).pathname) || ".";
       const root = depth === "." ? "./" : `${depth}/`;
       const links = PAGES.map(([path, title]) => `<a href="${root}${path}/">${title}</a>`).join("");
+      // Çerezsiz ziyaretçi sayacı; geliştirme sunucusundaki ziyaretler sayılmasın diye yalnızca derlemede
+      const analytics = beacon && !ctx.server
+        ? `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${beacon}"}'></script>\n` : "";
       return render(html, root)
         .replace("</head>", `<meta name="google-adsense-account" content="${adsense}">\n</head>`)
+        .replace("</body>", `${analytics}</body>`)
         .replace("<!--site-header-->", page("header").replaceAll("{root}", root))
         .replace("<!--site-footer-->", page("footer").replaceAll("{root}", root).replace("{links}", links));
     },
@@ -54,7 +58,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   return {
     base: "./",
-    plugins: [react(), site(env.VITE_SITE_URL, env.VITE_ADSENSE_CLIENT)],
+    plugins: [react(), site(env.VITE_SITE_URL, env.VITE_ADSENSE_CLIENT, env.VITE_CF_BEACON)],
     build: {
       rollupOptions: {
         input: Object.fromEntries(ALL.map(u => [u.slice(0, -1).replaceAll("/", "-") || "main", `${u}index.html`])),
