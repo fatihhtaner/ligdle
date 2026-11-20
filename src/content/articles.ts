@@ -8,8 +8,8 @@ export const ARTICLES: [slug: string, title: string, description: string][] = [
     "Her sezonun şampiyonu, ikincisi ve üçüncüsü; kulüplerin şampiyonluk sayıları ve en uzun seriler."],
   ["1959-oncesi-sampiyonluklar", "1959 öncesi şampiyonluklar: Süper Lig'den önceki ligler",
     "Türkiye Futbol Şampiyonası, Millî Küme ve Federasyon Kupası; kimler kazandı ve neden resmî sayılmıyor."],
-  ["super-lig-gol-krallari", "Süper Lig gol kralları",
-    "1959'dan bu yana her sezonun gol kralı, attığı gol sayısı ve en çok gol krallığı yaşayan oyuncular."],
+  ["super-lig-gol-krallari", "Süper Lig gol krallığı: 1959'dan bugüne bütün gol kralları",
+    "Her sezonun gol kralı ve attığı gol; en çok gol krallığı yaşayanlar, kulüpler ve dönemler."],
   ["turkiyede-oynayan-yabancilar", "Türkiye'de oynayan yabancı futbolcular: hangi ülkeden kimler geldi",
     "Ligdle veri setindeki yabancı oyuncuların ülkelere ve bölgelere göre dağılımı."],
 ];

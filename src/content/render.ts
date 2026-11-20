@@ -243,6 +243,8 @@ function figures(): Record<string, string | number> {
     players: PLAYERS.length, foreign: foreign.length, countries: new Set(foreign.map(p => p.nat)).size,
     positions: Object.keys(POS_GROUP).length,
     turkish: PLAYERS.length - foreign.length,
+    lastKings: (() => { const n = kings.at(-1)!.scorers.map(x => `${x.name} (${x.club})`); return n.length > 1 ? `${n.slice(0, -1).join(", ")} ve ${n.at(-1)}` : n[0]; })(),
+    lastGoals: kings.at(-1)!.goals ?? "–",
     kingSeasons: kings.length, foreignKingSeasons: kings.filter(foreignKing).length,
     recentForeign: kings.slice(-10).filter(foreignKing).length,
     kingChampion: kings.filter(s => s.scorers.some(x => x.club === s.winner)).length,
